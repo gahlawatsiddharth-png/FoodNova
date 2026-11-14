@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FoodNova Live Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b141b;--card:#111f29;--field:#1b2e3a;--p:#16a34a;--k:#22c55e;--l:#4ade80;--m:#8b9aa5}
+*{box-sizing:border-box}body{margin:0;color:#eaf4f0;font:16px/1.5 "Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;padding:28px;background:radial-gradient(900px 520px at 88% -8%,#14532d66,transparent 60%),radial-gradient(700px 520px at -8% 108%,#0f766e50,transparent 60%),#08131a;background-attachment:fixed}
+header{display:flex;align-items:center;gap:14px;margin-bottom:20px}header h1{margin:0;font-size:2.2rem;font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#4ade80,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:auto}
+.live{color:var(--l)}.muted{color:var(--m)}.card{background:linear-gradient(180deg,#ffffff08,#ffffff02),#0f1e28;border:1px solid #1b3342;border-radius:22px;padding:22px;box-shadow:0 12px 34px #00000059}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:16px}
+.stat b{display:block;font-size:2.8rem;font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#4ade80,#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hot{background:linear-gradient(135deg,var(--p),var(--k));margin-bottom:16px}.hot h2{margin:0;font-size:2rem}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-bottom:16px}
+.bar{display:flex;align-items:center;gap:10px;margin:10px 0}.bar span{width:120px}.bar i{flex:1;height:14px;background:var(--field);border-radius:9px;overflow:hidden}
+.bar u{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--k))}.bar b{color:var(--l);width:70px;text-align:right}
+.trend{display:flex;align-items:flex-end;gap:12px;height:200px}.col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center}
+.col u{display:block;width:100%;min-height:3px;background:linear-gradient(var(--k),var(--p));border-radius:10px 10px 0 0}.col span{font-size:.8rem;color:var(--m);margin-top:6px}
+.gate{max-width:420px;margin:80px auto;text-align:center}.gate a{display:inline-block;margin-top:10px;background:var(--p);color:#fff;text-decoration:none;padding:12px 22px;border-radius:16px;font-weight:700}
+</style></head>
+<body>
+<header><h1>♻ FoodNova Live</h1><span class="live">● updating every 5 s</span><span class="muted" id="clock"></span></header>
+<div id="board"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const bars = rows => { const m = Math.max(1, ...rows.map(r => r[1]));
+  return rows.map(([k, v]) => `<div class="bar"><span>${esc(k)}</span><i><u style="width:${v / m * 100}%"></u></i><b>${v} g</b></div>`).join("") || '<p class="muted">No data yet.</p>'; };
+const when = t => esc((t || "").replace("T", " ").slice(0, 16));
+
+function render(s) {
+  const top = s.by_category[0], mx = Math.max(1, ...s.by_day.map(d => d[1]));
+  $("#board").innerHTML = `
+  <div class="card hot"><h2>${top ? esc(top[0]) + " is the most wasted food: " + top[1] + " g" : "No waste recorded yet"}</h2></div>
+  <div class="grid">
+    <div class="card stat"><b>${(s.total_g / 1000).toFixed(2)} kg</b>total waste</div><div class="card stat"><b>${s.events}</b>disposal events</div>
+    <div class="card stat"><b>${s.avg_g} g</b>average per event</div><div class="card stat"><b>${s.blocked}</b>students blocked</div></div>
+  <div class="cols">
+    <div class="card"><h3>Last 7 days (grams)</h3><div class="trend">${s.by_day.map(d => `<div class="col"><u style="height:${d[1] / mx * 100}%"></u><span>${d[0].slice(5)}<br>${d[1]} g</span></div>`).join("")}</div></div>
+    <div class="card"><h3>By food category</h3>${bars(s.by_category)}<h3>By meal period</h3>${bars(s.by_meal)}</div></div>
+  <div class="cols">
+    <div class="card"><h3>What students wrote</h3>${s.suggestions.map(x => `<p><b>${esc(x.topic)}</b> <span class="muted">· ${esc(x.username)} · ${when(x.ts)}</span><br>${esc(x.message)}</p>`).join("") || '<p class="muted">No messages yet.</p>'}</div>
+    <div class="card"><h3>Latest feedback on wasted food</h3>${s.feedback.map(f => `<p><b>${esc(f.category)} · ${f.grams} g</b> <span class="muted">(${f.pct}% left)</span><br>${esc(f.reason)}${f.note ? " — “" + esc(f.note) + "”" : ""}<br><span class="muted">${when(f.ts)}</span></p>`).join("") || '<p class="muted">No feedback yet.</p>'}</div></div>`;
+}
+async function load() {
+  try {
+    const r = await fetch("/api/stats", {headers: {Authorization: "Bearer " + localStorage.getItem("fn_token")}});
+    if (!r.ok) throw 0;
+    render(await r.json());
+  } catch (e) {
+    $("#board").innerHTML = '<div class="card gate"><h2>Chef login needed</h2><p class="muted">Log in as chef on the main page, then reopen this dashboard.</p><a href="/">Go to login</a></div>';
+  }
+}
+setInterval(() => $("#clock").textContent = new Date().toLocaleString(), 1000);
+load(); setInterval(load, 5000);
+</script></body></html>

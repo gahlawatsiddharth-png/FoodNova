@@ -1,0 +1,20 @@
+-- FoodNova database. One row in `waste` = one disposal event
+-- (Event ID | Date+Time | Weight | Food Category | Student), feedback links to it.
+CREATE TABLE IF NOT EXISTS users(
+  username TEXT PRIMARY KEY, name TEXT, salt TEXT, pw TEXT, role TEXT DEFAULT 'student');
+CREATE TABLE IF NOT EXISTS waste(
+  id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT NOT NULL, grams INTEGER NOT NULL,
+  category TEXT NOT NULL, username TEXT, answered INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS feedback(
+  id INTEGER PRIMARY KEY AUTOINCREMENT, waste_id INTEGER, username TEXT,
+  reason TEXT, pct INTEGER, note TEXT, ts TEXT);
+CREATE INDEX IF NOT EXISTS idx_waste_user ON waste(username, answered);
+CREATE TABLE IF NOT EXISTS suggestions(
+  id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, topic TEXT, message TEXT, ts TEXT);
+CREATE TABLE IF NOT EXISTS tests(
+  id INTEGER PRIMARY KEY AUTOINCREMENT, kind TEXT, a REAL, b REAL, note TEXT, ts TEXT);
+CREATE TABLE IF NOT EXISTS counters(name TEXT PRIMARY KEY, n INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS logins(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, ts TEXT);
+CREATE TABLE IF NOT EXISTS notes(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, message TEXT, ts TEXT, seen INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS notifications(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, message TEXT, ts TEXT, seen INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS scans(id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT, method TEXT, card_found INTEGER, matched INTEGER, source TEXT);

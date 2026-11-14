@@ -1,0 +1,9 @@
+# Needed for Barcode ID scanning (pyzbar reads Code 128 / Code 39 / EAN; OpenCV handles image processing)
+opencv-python-headless>=4.8
+numpy
+pyzbar
+pillow
+requests
+pyserial
+# Optional: YOLOv8 card detector. Needs a trained id_card.pt next to server.py (see README). Large download.
+# ultralytics

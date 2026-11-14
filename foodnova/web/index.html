@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FoodNova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08131a;--side:#0a1820;--card:#0f1e28;--card2:#132633;--line:#1b3342;--line2:#2a5a48;--field:#0a1720;--g:#22c55e;--gl:#4ade80;--teal:#2dd4bf;--t:#eaf4f0;--m:#8ba7b0;--r:#f87171;--sh:0 12px 34px #00000059;--grad:linear-gradient(135deg,#22c55e,#10b981 60%,#2dd4bf)}
+body.light{--bg:#eef5f2;--side:#fff;--card:#fff;--card2:#f1f8f4;--line:#d9e7e0;--line2:#9fd8b8;--field:#f4faf7;--t:#10241b;--m:#5f786d;--sh:0 10px 28px #14532d1a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;color:var(--t);font:14px/1.5 "Plus Jakarta Sans","Inter","Segoe UI Variable","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(900px 520px at 88% -8%,#14532d55,transparent 60%),radial-gradient(700px 520px at -8% 108%,#0f766e40,transparent 60%),var(--bg);background-attachment:fixed}
+body.light{background:radial-gradient(900px 520px at 88% -8%,#bbf7d0aa,transparent 60%),radial-gradient(700px 520px at -8% 108%,#99f6e488,transparent 60%),var(--bg);background-attachment:fixed}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-track{background:transparent}
+.app{display:grid;grid-template-columns:240px 1fr;height:100vh}
+aside{background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;padding:4px 8px 22px;letter-spacing:-.2px}
+.brand span{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--grad);box-shadow:0 6px 18px #22c55e55;font-size:1.3rem}
+.nav{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:12px;color:var(--m);cursor:pointer;margin-bottom:4px;position:relative;transition:.18s;font-weight:500}
+.nav .ni{font-style:normal;display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--card2);transition:.18s}
+.nav:hover{color:var(--t);background:#ffffff08}.nav:hover .ni{transform:scale(1.08)}
+.nav.on{color:var(--gl);font-weight:700;background:linear-gradient(90deg,#22c55e26,transparent)}.nav.on .ni{background:var(--grad);box-shadow:0 4px 14px #22c55e55}
+.nav.on:before{content:"";position:absolute;left:-14px;top:9px;bottom:9px;width:4px;border-radius:0 4px 4px 0;background:var(--gl);box-shadow:0 0 12px var(--gl)}
+body.light .nav.on{color:#15803d}
+.who{display:flex;align-items:center;gap:10px;margin-top:auto;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--card2)}.who b{display:block;line-height:1.2}.who small{color:var(--m)}
+.av{background:var(--grad);color:#04210f;border-radius:12px;width:36px;height:36px;display:grid;place-items:center;font-weight:800;flex:none}
+.foot{display:flex;gap:8px;margin-top:10px}.foot button{flex:1;background:var(--card2);color:var(--t);border:1px solid var(--line);border-radius:10px;padding:9px;cursor:pointer;font:inherit;transition:.18s}.foot button:hover{border-color:var(--g)}
+.main{display:flex;flex-direction:column;min-width:0;height:100vh}
+header{display:flex;align-items:center;gap:14px;padding:16px 30px;border-bottom:1px solid var(--line);background:#08131a99;backdrop-filter:blur(12px)}body.light header{background:#ffffffb3}
+header h1{font-size:1.4rem;margin:0;margin-right:auto;font-weight:800;letter-spacing:-.4px}header small{color:var(--m)}.hout{display:none}
+.bell{position:relative;cursor:pointer;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--card2);border:1px solid var(--line);transition:.18s}.bell:hover{border-color:var(--g)}
+.bell b{position:absolute;top:-6px;right:-6px;background:linear-gradient(135deg,#f87171,#ef4444);color:#fff;border-radius:99px;font-size:.65rem;padding:1px 6px;box-shadow:0 2px 8px #ef444488}.bell b:empty{display:none}
+.page{padding:26px 30px 40px;overflow:auto;flex:1}
+.card{background:linear-gradient(180deg,#ffffff08,#ffffff02),var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:18px;box-shadow:var(--sh);transition:border-color .2s,transform .2s;overflow-x:auto}body.light .card{background:var(--card)}
+.card h3{margin:0 0 14px;font-size:1.02rem;font-weight:700}
+.grid{display:grid;gap:18px;margin-bottom:18px}.grid .card{margin:0}.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(350px,1fr))}
+.tile{position:relative;overflow:hidden}.tile:hover{transform:translateY(-3px);border-color:var(--line2)}.tile:after{content:"";position:absolute;right:-34px;top:-34px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#22c55e30,transparent 70%);pointer-events:none}
+.ico{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#22c55e33,#2dd4bf22);font-size:1.35rem;margin-bottom:8px;border:1px solid #22c55e33}
+.hero{background:linear-gradient(135deg,#14532d,#0f766e 75%);border-color:#22c55e66;color:#fff}.hero h3{color:#fff}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.big{font-size:2rem;font-weight:800;letter-spacing:-1px;line-height:1.15;background:linear-gradient(90deg,var(--gl),var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}body.light .big{background:linear-gradient(90deg,#15803d,#0d9488);-webkit-background-clip:text;background-clip:text}
+.sm{font-size:.8rem;color:var(--m)}
+.btn{background:var(--grad);color:#04210f;border:0;border-radius:12px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 6px 18px #22c55e40;transition:transform .15s,box-shadow .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 10px 24px #22c55e55}.btn:active{transform:scale(.98)}
+.btn.ghost{background:var(--card2);color:var(--t);border:1px solid var(--line);box-shadow:none}.btn.ghost:hover{border-color:var(--g)}.btn.sel{background:#14532d;color:#fff;border-color:var(--g)}
+.btn[style*="b91c1c"]{color:#fff;box-shadow:0 6px 18px #b91c1c55}
+.chip{background:var(--card2);color:var(--m);border:1px solid var(--line);border-radius:8px;padding:4px 11px;cursor:pointer;font:inherit;font-size:.75rem;transition:.15s}.chip:hover{border-color:var(--g);color:var(--t)}.chip.on{background:var(--grad);color:#04210f;border-color:transparent;font-weight:700}
+input,select,textarea{background:var(--field);color:var(--t);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font:inherit;width:100%;margin:5px 0;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--g);box-shadow:0 0 0 4px #22c55e22}input::placeholder,textarea::placeholder{color:#5d7a82}
+input[type=range]{padding:0;accent-color:var(--g);box-shadow:none}.row select{width:auto}
+table{width:100%;min-width:560px;border-collapse:separate;border-spacing:0}
+th{color:var(--gl);text-align:left;font-size:.8rem;font-weight:700;padding:11px 12px;background:#22c55e14}th:first-child{border-radius:12px 0 0 12px}th:last-child{border-radius:0 12px 12px 0}body.light th{color:#15803d}
+td{padding:13px 12px;border-bottom:1px solid var(--line)}tbody tr{transition:background .15s}tbody tr:hover{background:#22c55e0d}tbody tr:last-child td{border-bottom:0}
+.pill{padding:3px 11px;border-radius:99px;font-size:.74rem;font-weight:700;background:#22c55e22;color:var(--gl);border:1px solid #22c55e44;white-space:nowrap}
+.pill.bad{background:#ef444422;color:#fca5a5;border-color:#ef444455}.pill.off{background:#ffffff0d;color:var(--m);border-color:var(--line)}body.light .pill{color:#15803d}body.light .pill.bad{color:#b91c1c}
+.err{color:#f87171;min-height:1.2em;margin:4px 0;font-size:.85rem}
+.login{position:relative;display:grid;place-items:center;min-height:100vh;padding:16px;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:float 14s ease-in-out infinite}.o1{width:420px;height:420px;background:#16a34a;top:-120px;left:-100px}.o2{width:380px;height:380px;background:#0d9488;bottom:-120px;right:-80px;animation-delay:-6s}
+.lcard{position:relative;z-index:1;width:min(440px,100%);background:#0f1e28d9;backdrop-filter:blur(18px);border:1px solid #2a5a4899;border-radius:28px;padding:32px 28px;text-align:center;box-shadow:0 30px 80px #000000aa}body.light .lcard{background:#ffffffd9}
+.sprout{font-size:3.2rem;display:inline-block;animation:bob 3s ease-in-out infinite}
+.logo{margin:4px 0;font-size:2.2rem;font-weight:800;letter-spacing:-1px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tog{display:flex;background:var(--field);border:1px solid var(--line);border-radius:14px;padding:4px;margin:18px 0}.tog button{flex:1;border:0;background:none;color:var(--m);padding:10px;border-radius:10px;cursor:pointer;font:inherit;font-weight:600;transition:.2s}.tog .on{background:var(--grad);color:#04210f;box-shadow:0 4px 14px #22c55e55}
+.demo{border:1px solid #22c55e55;background:#22c55e12;border-radius:14px;padding:12px 14px;text-align:left;font-size:.81rem;margin:14px 0}
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.feat div{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:12px 4px;font-size:.72rem;color:var(--m);transition:.2s}.feat div:hover{transform:translateY(-3px);border-color:var(--line2)}.feat b{display:block;font-size:1.4rem}
+.chart{width:100%;height:auto}.chart text{fill:var(--m);font-size:10px}
+.donut{width:210px;height:210px;border-radius:50%;margin:auto;position:relative;box-shadow:0 0 40px #22c55e22}.donut:after{content:"";position:absolute;inset:44px;background:var(--card);border-radius:50%}
+.donut span{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:1;font-weight:800;font-size:1.3rem}.donut small{display:block;color:var(--m);font-weight:500;font-size:.72rem}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.bar{display:flex;align-items:center;gap:12px;margin:11px 0}.bar span{width:140px;color:var(--m);font-size:.84rem}.bar i{flex:1;height:12px;background:var(--field);border-radius:99px;overflow:hidden;border:1px solid var(--line)}.bar u{display:block;height:100%;border-radius:99px;transform-origin:left}.bar b{width:74px;text-align:right;color:var(--gl)}
+.ach{padding:14px;border-radius:16px;background:var(--field);border:1px solid var(--line);opacity:.45;filter:grayscale(.6);transition:.2s}.ach.on{opacity:1;filter:none;border-color:#22c55e66;background:linear-gradient(135deg,#22c55e1a,transparent)}.ach b{display:block;margin-top:4px}
+.emo{display:flex;flex-wrap:wrap;gap:10px}.emo .btn{padding:9px 14px}
+.chk{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.chk label{display:flex;gap:10px;align-items:center;background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;transition:.15s}.chk label:hover{border-color:var(--g)}.chk input{width:auto;margin:0;accent-color:var(--g)}
+.tip{border:1px solid #22c55e44;background:linear-gradient(135deg,#22c55e14,transparent);border-radius:16px;padding:14px}.tip i{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--grad);color:#04210f;font-style:normal;font-weight:800;margin-bottom:6px}
+.fbi{padding:13px 0;border-bottom:1px solid var(--line)}.fbi:last-child{border-bottom:0}
+.modal{position:fixed;inset:0;background:#020a0eb8;backdrop-filter:blur(6px);display:grid;place-items:center;z-index:9;animation:fade .2s}.modal .card{width:min(440px,92vw);margin:0;animation:pop .25s cubic-bezier(.2,.9,.3,1.2)}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--grad);color:#04210f;padding:11px 22px;border-radius:14px;z-index:10;font-weight:700;box-shadow:0 12px 30px #22c55e55;animation:toastin .3s}
+.stream-box{position:relative;border-radius:16px;overflow:hidden;border:2px solid var(--g);background:#000;aspect-ratio:4/3;display:grid;place-items:center}
+.stream-box img{width:100%;height:100%;object-fit:cover;display:block}
+.live-tag{position:absolute;top:12px;left:12px;background:#08131acc;backdrop-filter:blur(6px);border:1px solid #22c55e88;color:#4ade80;padding:4px 11px;border-radius:99px;font-size:.75rem;font-weight:700;z-index:2}
+@keyframes fade{from{opacity:0}}@keyframes pop{from{opacity:0;transform:scale(.94)}}@keyframes toastin{from{opacity:0;transform:translateX(-50%) translateY(14px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}@keyframes float{50%{transform:translate(30px,24px) scale(1.08)}}@keyframes bob{50%{transform:translateY(-8px) rotate(4deg)}}@keyframes grow{from{transform:scaleX(0)}}
+.page.enter>*{animation:fadeUp .5s cubic-bezier(.2,.8,.2,1) both}.page.enter>:nth-child(2){animation-delay:.06s}.page.enter>:nth-child(3){animation-delay:.12s}.page.enter>:nth-child(4){animation-delay:.18s}.page.enter>:nth-child(5){animation-delay:.24s}.page.enter>:nth-child(n+6){animation-delay:.3s}
+.page.enter .bar u{animation:grow .9s cubic-bezier(.2,.8,.2,1) .2s both}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:860px){.app{grid-template-columns:1fr;height:auto}aside{position:fixed;bottom:0;left:0;right:0;z-index:6;flex-direction:row;padding:6px 8px;border-right:0;border-top:1px solid var(--line);overflow-x:auto;gap:2px}
+  .brand,.who,.foot{display:none}.nav{flex:0 0 auto;flex-direction:column;gap:2px;padding:6px 10px;font-size:.65rem;margin:0}.nav.on:before{display:none}.nav .ni{width:30px;height:30px}
+  .main{height:auto;min-height:100vh;padding-bottom:78px}header{padding:12px 16px}.hout{display:block;padding:7px 12px}.page{padding:16px 14px;overflow:visible}header h1{font-size:1.1rem}}
+@media print{:root{--t:#111;--m:#444;--card:#fff;--line:#ccc;--field:#fff;--gl:#15803d}body{background:#fff!important}aside,header,.btn,.bell{display:none}.app{display:block;height:auto}.main{height:auto}.page{overflow:visible}.card{box-shadow:none;background:#fff}.big{-webkit-text-fill-color:#15803d}}
+</style></head>
+<body><div id="root"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DEFAULT_DISHES = [
+  "Dal Tadka / Dal Fry", "Paneer Butter Masala", "Jeera Rice", "Steamed White Rice",
+  "Veg Biryani", "Veg Pulao", "Rajma Masala", "Chole Masala", "Aloo Gobi Sabzi",
+  "Mixed Veg Sabzi", "Palak Paneer / Saag", "Bhindi Fry", "Tawa Roti / Chapati",
+  "Aloo Paratha", "Puri / Bhatura", "Kadhi Pakora", "Sambhar", "Masala Dosa",
+  "Idli", "Lemon Rice / Poha", "Samosa / Kachori", "Chowmein / Noodles",
+  "Curd Rice", "Green Salad / Cucumber", "Gulab Jamun", "Watermelon / Cut Fruit"
+];
+const MEALS = ["breakfast","lunch","dinner"];
+const RS = ["Poor taste/flavor","Bad texture/preparation","Excessive portion","Not hungry","Allergy/dietary restriction","Meal timing issue","Not fresh","Personal preference"], EM = ["😖","🍽️","🥘","😌","⚠️","⏰","🚫","❌"];
+const COL = ["#22c55e","#84cc16","#eab308","#f97316","#ef4444","#a855f7"];
+const YIELD = 0.3;
+const isCompostableDish = d => /sabzi|veg|salad|fruit|gobhi|gobi|bhindi|palak|saag|banana|watermelon|papaya|cucumber/i.test(d || "");
+const route = e => (e.category == "Unknown / Mixed" || e.category == "No Food Detected") ? "Needs review" : e.untouched ? "Redistribute (if safe)" : isCompostableDish(e.dish_name || e.category) ? "Compost" : "Treatment facility";
+let token = localStorage.getItem("fn_token"), S = {}, role = "student", view = "dash", period = 7, filt = {t: "", m: ""}, sat = 0, sq = "", amode = "login", arole = "student", timer;
+let foodCam = {stream: null}, autoS3Timer = null;
+
+const dishOptions = () => {
+  const menuDishes = ((S.scan && S.scan.menu) || []).map(m => m.dish_name);
+  const existing = [...new Set((S.ev || []).map(e => e.dish_name || e.category).filter(Boolean))];
+  return [...new Set([...menuDishes, ...existing, ...DEFAULT_DISHES])];
+};
+
+async function api(path, body) {
+  const r = await fetch("/api/" + path, {method: body ? "POST" : "GET", headers: {"Content-Type": "application/json", Authorization: "Bearer " + token}, body: body && JSON.stringify(body)});
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || "Something went wrong."); return j;
+}
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const days = n => [...Array(n)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - (n - 1 - i)); return d; });
+const since = n => { const d = days(n)[0]; d.setHours(0, 0, 0, 0); return d; };
+const inDays = (ev, n) => ev.filter(e => new Date(e.ts) >= since(n));
+const prevWeek = ev => sum(ev.filter(e => { const d = new Date(e.ts); return d < since(7) && d >= since(14); }));
+const sum = ev => ev.reduce((a, e) => a + e.grams, 0), kg = g => (g / 1000).toFixed(2);
+const daily = (ev, n) => days(n).map(d => sum(ev.filter(e => e.ts.startsWith(ymd(d)))));
+const isToday = e => e.ts.startsWith(ymd(new Date()));
+const meal = e => e.meal || (+e.ts.slice(11, 13) < 11 ? "breakfast" : +e.ts.slice(11, 13) < 16 ? "lunch" : "dinner");
+const byCat = ev => { const m = {}; ev.forEach(e => { const k = e.dish_name || e.category; m[k] = (m[k] || 0) + e.grams; }); return Object.entries(m).sort((a, b) => b[1] - a[1]); };
+const peak = ev => { const m = {}; ev.forEach(e => m[meal(e)] = (m[meal(e)] || 0) + e.grams); return Object.entries(m).sort((a, b) => b[1] - a[1])[0]; };
+const fmt = t => new Date(t).toLocaleString(), opts = a => a.map(x => `<option>${esc(x)}</option>`).join("");
+const score = (ev, pend = 0) => Math.max(5, 100 - Math.min(60, Math.round(sum(inDays(ev, 7)) / 25)) - 10 * pend);
+const badge = s => s >= 90 ? "Platinum" : s >= 75 ? "Gold" : s >= 50 ? "Silver" : "Bronze";
+const ach = (ev, sc, fb) => { const w = sum(inDays(ev, 7)), p = prevWeek(ev);
+  return [["🌱","Green Start","Record first waste",ev.length >= 1],["♻️","Recycler","50 waste records",ev.length >= 50],["⭐","Eco Champion","Score above 80",sc > 80],["👑","Platinum","Score above 90",sc > 90],["🏆","Legend","Cut waste 80% vs last week",p > 0 && w <= p * .2],["🌍","Planet Guardian","100 feedbacks",fb >= 100]]; };
+
+function line(vals, labels) {
+  const W = 700, H = 230, p = 38, mx = Math.max(1, ...vals), st = (W - p * 2) / (vals.length - 1 || 1), ev = Math.ceil(vals.length / 8), base = H - p;
+  const pt = vals.map((v, i) => [p + i * st, H - p - v / mx * (H - p * 2)]);
+  const grid = [0, .25, .5, .75, 1].map(f => { const y = H - p - f * (H - p * 2); return `<line x1="${p}" x2="${W - p}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-dasharray="3 5"/><text x="${p - 8}" y="${y + 3}" text-anchor="end">${+(mx * f).toFixed(2)}</text>`; }).join("");
+  const path = pt.map((x, i) => (i ? "L" : "M") + x[0] + "," + x[1]).join(" ");
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22c55e" stop-opacity=".35"/><stop offset="1" stop-color="#22c55e" stop-opacity="0"/></linearGradient><linearGradient id="ls" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#4ade80"/></linearGradient></defs>${grid}
+  <path d="${path} L${pt[pt.length - 1][0]},${base} L${pt[0][0]},${base} Z" fill="url(#lg)"/><path d="${path}" fill="none" stroke="url(#ls)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  ${pt.map((x, i) => `<circle cx="${x[0]}" cy="${x[1]}" r="3.5" fill="var(--card)" stroke="#4ade80" stroke-width="2"><title>${labels[i]}: ${vals[i]}</title></circle>${i % ev == 0 ? `<text x="${x[0]}" y="${H - 12}" text-anchor="middle">${labels[i]}</text>` : ""}`).join("")}</svg>`;
+}
+const wd = d => d.toLocaleDateString("en", {weekday: "short"}), md = d => d.toLocaleDateString("en", {month: "short", day: "numeric"});
+const donut = rows => { const tot = rows.reduce((a, r) => a + r[1], 0), t = tot || 1; let acc = 0;
+  const seg = rows.map((r, i) => { const a = acc / t * 100; acc += r[1]; return `${COL[i % 6]} ${a}% ${acc / t * 100}%`; }).join(",");
+  return `<div class="donut" style="background:conic-gradient(${seg || "var(--line) 0 100%"})"><span><div>${tot >= 1000 ? (tot / 1000).toFixed(1) + " kg" : tot + " g"}<small>total waste</small></div></span></div>`; };
+const bars = rows => { const m = Math.max(1, ...rows.map(r => r[1]));
+  return rows.map((r, i) => `<div class="bar"><span>${esc(r[0])}</span><i><u style="width:${r[1] / m * 100}%;background:${COL[i % 6]}"></u></i><b>${r[1]} g</b></div>`).join("") || '<p class="sm">No data yet.</p>'; };
+const ring = s => `<svg width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="var(--line)" stroke-width="9"/><circle cx="50" cy="50" r="40" fill="none" stroke="#4ade80" stroke-width="9" stroke-linecap="round" stroke-dasharray="${s * 2.513} 251.3" transform="rotate(-90 50 50)"/><text x="50" y="55" text-anchor="middle" fill="var(--t)" font-size="18" font-weight="700">${s}%</text></svg>`;
+const tiles = a => `<div class="grid g4">${a.map(c => `<div class="card tile"><span class="ico">${c[0]}</span><div class="sm">${c[1]}</div><div class="big">${c[2]}</div><div class="sm">${c[3] || ""}</div></div>`).join("")}</div>`;
+function toast(m) { const t = document.createElement("div"); t.className = "toast"; t.textContent = m; document.body.append(t); setTimeout(() => t.remove(), 2600); }
+
+// ---------------- Separate Student (name / name@123) vs Admin Login Portal
+function fillDemo(u, p, r) {
+  arole = r; amode = "login"; auth();
+  const f = document.querySelector(".lcard form");
+  if (f) { f.username.value = u; f.password.value = p; }
+}
+function auth(err = "") {
+  const su = amode == "signup" && arole == "student";
+  $("#root").innerHTML = `<div class="login"><i class="orb o1"></i><i class="orb o2"></i><div class="lcard"><div class="sprout">🌱</div><h1 class="logo">FoodNova</h1><p class="sm">Measure waste. Prevent what you can. Recover what remains.</p>
+  <div class="tog"><button class="${arole == "student" ? "on" : ""}" onclick="arole='student';auth()">🧑‍🎓 Student Login</button><button class="${arole == "admin" ? "on" : ""}" onclick="arole='admin';amode='login';auth()">👨‍🍳 Admin / Chef</button></div>
+  <form onsubmit="doAuth(event)" style="text-align:left">
+    ${su ? '<label class="sm">Full Student Name</label><input name="name" required placeholder="e.g. Siddharth"><label class="sm">ID Card Barcode String</label><input name="card" required placeholder="e.g. FN2026106">' : ""}
+    <label class="sm">${arole == "student" ? "Student Name (Username)" : "Admin Username"}</label>
+    <input name="username" required autocomplete="username" placeholder="${arole == "student" ? "e.g. aarav, priya, rohan, ananya, kabir" : "chef or manager"}">
+    <label class="sm">Password ${arole == "student" ? "(name@123)" : ""}</label>
+    <input name="password" type="password" minlength="6" required placeholder="${arole == "student" ? "e.g. aarav@123" : "chef123 or manager123"}">
+    ${su ? '<label class="sm">Confirm password</label><input name="confirm" type="password" required>' : ""}
+    <p class="err">${esc(err)}</p>
+    <button class="btn" style="width:100%;padding:12px">${su ? "Create Student Account" : arole == "student" ? "Enter Student Portal →" : "Enter Admin Portal →"}</button>
+  </form>
+  ${arole == "student" ? `<p class="sm"><a href="#" style="color:var(--gl)" onclick="amode='${su ? "login" : "signup"}';auth();return false">${su ? "Already have an account? Log in" : "New student? Register your ID barcode"}</a></p>` : ""}
+  ${arole == "student" ? `<div class="demo"><b style="color:var(--gl)">🎓 Student Accounts (Click to Autofill):</b><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+    <button type="button" class="chip on" onclick="fillDemo('aarav','aarav@123','student')">Aarav (aarav@123)</button>
+    <button type="button" class="chip on" onclick="fillDemo('priya','priya@123','student')">Priya (priya@123)</button>
+    <button type="button" class="chip on" onclick="fillDemo('rohan','rohan@123','student')">Rohan (rohan@123)</button>
+    <button type="button" class="chip on" onclick="fillDemo('ananya','ananya@123','student')">Ananya (ananya@123)</button>
+    <button type="button" class="chip on" onclick="fillDemo('kabir','kabir@123','student')">Kabir (kabir@123)</button>
+  </div></div>` : `<div class="demo"><b style="color:var(--gl)">👨‍🍳 Staff Accounts (Click to Autofill):</b><div style="display:flex;gap:8px;margin-top:8px">
+    <button type="button" class="chip on" onclick="fillDemo('chef','chef123','admin')">Head Chef (chef123)</button>
+    <button type="button" class="chip on" onclick="fillDemo('manager','manager123','admin')">Manager (manager123)</button>
+  </div></div>`}
+  <div class="feat"><div><b>🍽️</b>Chef Menu AI</div><div><b>🪪</b>ESP32-CAM ID Scan</div><div><b>🍱</b>Exact Dish Vision</div></div></div></div>`;
+}
+async function doAuth(e) {
+  e.preventDefault(); const d = Object.fromEntries(new FormData(e.target)), su = amode == "signup" && arole == "student";
+  if (su && d.password != d.confirm) return auth("Passwords don't match.");
+  try { const r = await api(su ? "signup" : "login", {...d, as: arole});
+    if ((r.role != "student") != (arole == "admin")) return auth("Invalid username, password or role.");
+    token = r.token; localStorage.setItem("fn_token", token); view = ""; boot();
+  } catch (x) { auth(x.message); }
+}
+function logout() { clearInterval(timer); stopStream(); stopAutoS3(); if (cam.stream) camStop(); if (foodCam.stream) stopFoodCam(); token = null; localStorage.removeItem("fn_token"); auth(); }
+
+// ---------------- data + shell
+async function reload() {
+  S.me = await api("me"); const e = await api("events"); S.ev = e.events; S.st = e.students || [];
+  S.fb = (await api("feedbacks")).sort((a, b) => b.ts.localeCompare(a.ts));
+  if (S.me.role != "student") { const t = await api("tests"); S.tests = t.tests; S.dupes = t.duplicates; }
+  if (S.me.role == "manager") S.users = await api("users");
+  S.notes = S.me.role == "student" && S.me.blocked_by == "manager" ? await api("notes") : [];
+  S.notifs = S.me.role == "student" ? await api("notifications") : [];
+  S.scan = await api("scanner");
+  S.menuData = await api("menu");
+}
+async function boot() {
+  clearInterval(timer);
+  try { await reload(); role = S.me.role == "student" ? "student" : "admin"; if (!navItems().some(n => n[0] == view)) view = navItems()[0][0]; shell();
+    startStream();
+    timer = setInterval(async () => { try {
+      const typing = document.activeElement && ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName), prev = Math.max(0, ...(S.notifs || []).map(n => n.id));
+      await reload();
+      (S.notifs || []).filter(n => n.id > prev && !n.seen).forEach(n => { toast("🔔 " + n.message); if (window.Notification && Notification.permission == "granted") new Notification("FoodNova", {body: n.message}); });
+      if (["dash", "analytics", "compost", "access", "users", "notifs", "scanner"].includes(view) && !typing && !cam.stream && !foodCam.stream) render();
+      else if (view == "ai" && !typing) updateAiPanels();
+      else bell();
+    } catch (x) {} }, 3500);
+  } catch (x) { auth(); }
+}
+const NAV = {student: [["dash","📊","Dashboard"],["ai","🍱","AI Dish Recognition"],["scanner","🪪","ID Verification"],["waste","♻️","Waste Monitoring"],["notifs","🔔","Notifications"],["feedback","💬","Feedback"],["compost","🌿","Compost"]],
+  admin: [["ai","🍱","AI Dish Recognition"],["menu","🍽️","Today's Menu (Chef)"],["scanner","🪪","ID Scanner"],["waste","♻️","Waste Monitoring"],["analytics","📊","Analytics"],["compost","🌿","Compost"],["feedback","💬","Feedback"],["tests","🧪","Testing"]],
+  manager: [["access","🛂","Canteen Access"],["users","👥","Users & Logins"]]};
+const navItems = () => NAV[role].concat(S.me.role == "manager" ? NAV.manager : []);
+const TITLE = {
+  waste: ["Waste Monitoring", "Live ESP32-S3-CAM Stream, ID Verification & Exact Dish Waste Logs"],
+  ai: ["Exact Dish AI Recognition Hub", "Recognizes exact dish names using Today's Chef Menu (or Open-Vocabulary Dish Vision if no menu is set)"],
+  menu: ["Today's Canteen Menu (Chef Setup)", "Set today's dishes so the AI recognizes plates against the active menu, or leave empty for automatic dish detection"],
+  feedback: ["Feedback & Suggestions", "Help us improve food quality and reduce waste"],
+  compost: ["Compost Dashboard", "Compost production & environmental impact metrics"],
+  analytics: ["Admin Analytics Dashboard", "Dish-level food waste management insights"],
+  tests: ["Testing & Evaluation", "Enter results only after real prototype tests"],
+  notifs: ["Notifications", "Alerts from the bin about your food waste"],
+  scanner: ["1D Barcode ID Verification", "ESP32-CAM Bluetooth (COM9) Captured Images & Barcode Verification"],
+  access: ["Canteen Access", "Block or allow students at the canteen"],
+  users: ["Users & Logins", "Everyone who has logged in"]
+};
+function shell() {
+  $("#root").innerHTML = `<div class="app"><aside><div class="brand"><span>🌱</span>FoodNova</div>${navItems().map(n => `<div class="nav" data-v="${n[0]}" onclick="go('${n[0]}')"><i class="ni">${n[1]}</i><span class="nl">${n[2]}</span></div>`).join("")}
+  <div class="who"><span class="av">${esc(S.me.name[0])}</span><div><b>${esc(S.me.name)}</b><small>${{student: "Student (" + S.me.username + ")", chef: "Head Chef", manager: "Manager"}[S.me.role]}</small></div></div><div class="foot"><button onclick="document.body.classList.toggle('light')" title="Theme">🟡</button><button onclick="logout()">Logout</button></div></aside>
+  <div class="main"><header><h1 id="ttl"></h1><small id="sub"></small><span id="act"></span><span class="bell" onclick="go(S.me.role == 'manager' ? 'access' : role == 'admin' ? 'feedback' : 'notifs')">🔔<b id="bd"></b></span><button class="btn ghost hout" onclick="logout()">Logout</button></header><div class="page" id="pg"></div></div></div>`;
+  go(view);
+}
+function go(v) { if (cam.stream) camStop(); if (foodCam.stream) stopFoodCam(); if (v != "ai") stopAutoS3(); view = v; document.querySelectorAll(".nav").forEach(n => n.classList.toggle("on", n.dataset.v == v)); const pg = $("#pg"); pg.classList.remove("enter"); render(); void pg.offsetWidth; pg.classList.add("enter"); setTimeout(() => pg.classList.remove("enter"), 900); }
+function render() {
+  const t = view == "dash" ? [`Welcome back, ${esc(S.me.name)}!`, `Logged in as ${S.me.username} · ${S.me.dept || "Student"}`] : TITLE[view];
+  $("#ttl").innerHTML = t[0]; $("#sub").textContent = t[1];
+  $("#act").innerHTML = view == "waste" && role == "student" ? '<button class="btn" onclick="logModal()">+ Log Waste</button>' : view == "ai" ? '<button class="btn" onclick="snapS3AndRecognize()">📸 Snap S3-CAM & Recognize Dish</button>' : "";
+  bell();
+  $("#pg").innerHTML = PAGES[view]();
+  if (view == "waste") rows(); if (view == "access") accRows(); if (view == "notifs" && unreadN()) markRead();
+}
+
+// ---------------- Dynamic helper for AI Recognition & ID Verification Cards
+function renderIdVerificationCard() {
+  const sc = S.scan || {}, bt = sc.bt || {}, L = sc.latest;
+  const imgSrc = (L && L.image_url) || bt.last_id_image || "https://via.placeholder.com/160x120/0a1720/4ade80?text=ESP32-CAM+ID";
+  const isRejected = (bt.status == "ID Not Detected") || (L && !L.matched);
+  return `
+    <div style="display:flex;gap:16px;align-items:center;background:var(--field);border:1px solid ${isRejected ? "#ef444466" : "#22c55e55"};border-radius:16px;padding:14px">
+      <div style="text-align:center;flex:none">
+        <img src="${esc(imgSrc)}" style="width:140px;height:105px;object-fit:cover;border-radius:12px;border:2px solid ${isRejected ? "#ef4444" : "var(--g)"};background:#000">
+        <div class="sm" style="margin-top:4px">ESP32-CAM (${esc(bt.port || "COM9")})</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <span class="pill ${isRejected ? "bad" : ""}">${isRejected ? "❌ ID Not Detected" : L ? "✓ ID Verified · " + Math.round((L.confidence || 0.97) * 100) + "%" : "Waiting for ID Scan"}</span>
+        <h3 style="margin:6px 0 2px;font-size:1.18rem">${L && L.student_name ? esc(L.student_name) : "Show College ID Barcode"}</h3>
+        <div style="color:var(--gl);font-weight:700">${L && L.college_id ? esc(L.college_id) : "FN-2026-XXX"}</div>
+        <div class="sm" style="margin-top:4px">BT Status: <b>${esc(bt.status || "Listening on COM9")}</b></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+          <button class="chip on" onclick="trigScan('hw')">📸 Capture ESP32-CAM</button>
+          <button class="chip" onclick="trigScan('sim','FN-2026-101')">Simulate ID</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderFoodPredictionCard() {
+  const sc = S.scan || {}, lf = sc.last_food, menu = sc.menu || [];
+  const bd = (lf && lf.breakdown) || [];
+  return `
+    <div style="display:flex;gap:16px;align-items:center;background:var(--field);border:1px solid #22c55e66;border-radius:16px;padding:14px">
+      <div style="text-align:center;flex:none">
+        <img src="${lf && lf.image_url ? esc(lf.image_url) : "https://via.placeholder.com/160x120/0a1720/4ade80?text=S3-CAM+Dish"}" style="width:140px;height:105px;object-fit:cover;border-radius:12px;border:2px solid var(--g);background:#000">
+        <div class="sm" style="margin-top:4px">Analyzed Plate</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <span class="pill ${lf && lf.category == 'No Food Detected' ? 'bad' : ''}">${lf ? "✓ " + Math.round((lf.confidence || 0.94) * 100) + "% Confidence" : "Ready"}</span>
+          <span class="chip">${menu.length ? "🍽️ Guided by Chef's Menu (" + menu.length + ")" : "🌐 Open-Vocabulary Dish Mode"}</span>
+        </div>
+        <h3 style="margin:6px 0 2px;font-size:1.3rem;color:var(--gl)">${lf ? esc(lf.dish_name || lf.category) : "Waiting for Plate Snapshot"}</h3>
+        <div class="sm" style="margin-top:2px">Primary Dish: <b>${lf ? esc(lf.category) : "—"}</b> · Engine: <b>${lf ? esc(lf.model_used || "Vision AI") : "Free Multimodal VLM + Spatial Dish CV"}</b></div>
+        ${bd.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${bd.map(b => `<span class="chip on">${esc(b.category)}: <b>${b.pct}%</b></span>`).join("")}</div>` : ""}
+        ${lf && lf.category != "No Food Detected" ? `<div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+          <input id="aiGrams" type="number" min="1" value="165" placeholder="Grams" style="width:90px;margin:0;padding:6px 10px">
+          <button class="btn" style="padding:7px 13px" onclick="recordAiDrop('${esc(lf.category)}','${esc(lf.dish_name || lf.category)}','${esc(lf.image_url || "")}',${lf.confidence || 0.94})">✔ Log Dish Waste</button>
+        </div>` : ""}
+      </div>
+    </div>`;
+}
+
+function updateAiPanels() {
+  const idBox = $("#liveIdBox"), foodBox = $("#liveFoodBox");
+  if (idBox) idBox.innerHTML = renderIdVerificationCard();
+  if (foodBox) foodBox.innerHTML = renderFoodPredictionCard();
+}
+
+const access = () => { const b = S.me.blocked, P = S.me.pending.length;
+  return `<div class="card" style="border-color:${b ? "#7f1d1d" : "#166534"};background:${b ? "#3b0d0d55" : "#14532d33"}"><div class="row"><div><h3 style="color:${b ? "#fca5a5" : "var(--gl)"};margin:0">${b ? "🚫 Canteen access paused" : "✅ Canteen access is on"}</h3>
+  <div class="sm">${b ? (S.me.blocked_by == "manager" ? "The manager has paused your canteen access." + (S.me.blocked_note ? "<br><b>Reason from the manager:</b> " + esc(S.me.blocked_note) : "") + "<br>You can leave a note for the manager below." : "You have overdue feedback. Submit it to get back in.") : P ? `${P} bin drop(s) need your feedback within 24 hours.` : "Submit feedback within 24 hours of wasting food to keep your pass."}</div></div>${P ? '<button class="btn" onclick="go(\'feedback\')">Give feedback</button>' : ""}</div>${b && S.me.blocked_by == "manager" ? noteBox() : ""}</div>`; };
+
+const PAGES = {
+  dash() {
+    const ev = S.ev, P = S.me.pending.length, sc = score(ev, P), pe = inDays(ev, period), td = sum(ev.filter(isToday)), a = ach(ev, sc, S.fb.length), w = sum(inDays(ev, 7)), pw = prevWeek(ev),
+      ch = pw ? Math.round((pw - w) / pw * 100) : 0, menu = (S.scan && S.scan.menu) || [];
+    return `${access()}${cardBox()}
+    ${menu.length ? `<div class="card"><div class="row"><h3 style="margin:0">🍽️ Today's Canteen Menu (Set by Chef)</h3><span class="sm">${menu.length} dishes served today</span></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">${menu.map(m => `<span class="pill">🍛 ${esc(m.dish_name)} <small style="opacity:.75">(${esc(m.meal)})</small></span>`).join("")}</div></div>` : ""}
+    <div class="grid g3">
+    <div class="card hero"><h3>Making a Difference Today</h3><div>${new Date().toDateString()}</div><div><b>${td}g</b> <span class="sm">Today's Waste</span></div><div><b>${ev.filter(isToday).length}</b> <span class="sm">Drops Today</span></div><div>🌱</div></div>
+    <div class="card"><div class="row"><h3>Awareness Score</h3><span class="sm">This Month</span></div><div class="row">${ring(sc)}<div class="sm">🏅 ${badge(sc)} Member<br>${ch >= 0 ? "📉 ↓" : "📈 ↑"} ${Math.abs(ch)}% vs last week<br>⭐ ${a.filter(x => x[3]).length} of ${a.length} achievements</div></div></div>
+    <div class="card"><div class="row"><h3>Food Waste Statistics</h3><span><button class="chip ${period == 7 ? "on" : ""}" onclick="period=7;render()">Week</button> <button class="chip ${period == 30 ? "on" : ""}" onclick="period=30;render()">Month</button></span></div>
+    ${sum(pe)}g ${period == 7 ? "Weekly" : "Monthly"} Waste<br>${Math.round(sum(pe) / period)}g Avg. Daily<br>${pe.length} Meals Tracked<br>${S.fb.length * 10} Eco Points</div></div>
+    <div class="card"><div class="row"><h3>Weekly Waste Trend</h3><span class="sm">in grams</span></div>${line(daily(ev, 7), days(7).map(wd))}</div>
+    <div class="card"><h3>Eco Achievements</h3><div class="grid g3" style="margin:0">${a.map(x => `<div class="ach ${x[3] ? "on" : ""}">${x[0]} <b>${x[1]}</b><span class="sm">${x[2]}</span></div>`).join("")}</div></div>
+    <div class="card"><h3>Dishes You Wasted Most</h3>${bars(byCat(ev))}<span class="sm">Measured from your own bin drops.</span></div>`;
+  },
+  menu() {
+    const menu = (S.menuData && S.menuData.menu) || [], presets = (S.menuData && S.menuData.presets) || DEFAULT_DISHES;
+    const activeSet = new Set(menu.map(m => m.dish_name));
+    return `
+      <div class="card" style="border-color:#22c55e66">
+        <div class="row">
+          <div>
+            <h3 style="margin:0">👨‍🍳 Chef's Daily Menu Configuration</h3>
+            <p class="sm" style="margin:4px 0 0">
+              <b>How AI Dish Recognition works:</b><br>
+              • <b>When Today's Menu has dishes:</b> The AI Vision model inspects the food plate photo and matches it strictly against the dishes on Today's Menu.<br>
+              • <b>When Today's Menu is empty:</b> The AI automatically switches to <b>Open-Vocabulary Dish Recognition</b> and identifies any dish directly from the image!
+            </p>
+          </div>
+          ${menu.length ? `<button class="btn" style="background:#b91c1c" onclick="clearMenu()">🗑 Clear Today's Menu (Use Open AI)</button>` : `<span class="pill">Currently in Open-Vocabulary Dish Mode</span>`}
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center">
+          <input id="customDish" placeholder="Type any dish name (e.g. Paneer Tikka Masala, Dal Tadka, Jeera Rice, Jalebi)..." style="flex:2;min-width:240px;margin:0">
+          <select id="customMeal" style="width:150px;margin:0">
+            <option value="All Day">All Day</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch" selected>Lunch</option>
+            <option value="Evening / Dinner">Evening / Dinner</option>
+          </select>
+          <button class="btn" onclick="addCustomDish()">+ Add Dish to Today's Menu</button>
+        </div>
+      </div>
+
+      <div class="grid g2">
+        <div class="card">
+          <h3>🍛 Active Menu Today (${menu.length} Dishes)</h3>
+          ${menu.length ? `<table><thead><tr><th>Dish Name</th><th>Meal Period</th><th>Routing</th><th>Remove</th></tr></thead><tbody>
+            ${menu.map(m => `<tr>
+              <td><b style="color:var(--gl)">${esc(m.dish_name)}</b></td>
+              <td>${esc(m.meal)}</td>
+              <td><span class="pill">${m.compostable ? "🌿 Compost" : "🏭 Treatment"}</span></td>
+              <td><button class="btn ghost" style="padding:5px 10px" onclick="removeMenuDish(${m.id})">✕</button></td>
+            </tr>`).join("")}
+          </tbody></table>` : `<p class="sm">No dishes set for today. The AI will recognize any Indian dish directly from its visual appearance. Click any preset dish on the right (or type above) to build today's menu!</p>`}
+        </div>
+
+        <div class="card">
+          <h3>⚡ Quick-Add Popular Canteen Dishes (1-Click)</h3>
+          <p class="sm">Click any dish below to toggle it on Today's Menu:</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+            ${presets.map(d => `<button class="chip ${activeSet.has(d) ? "on" : ""}" onclick="quickAddDish('${esc(d)}')">${activeSet.has(d) ? "✓ " : "+ "}${esc(d)}</button>`).join("")}
+          </div>
+        </div>
+      </div>
+    `;
+  },
+  waste() {
+    const ev = S.ev, td = ev.filter(isToday), last = ev[0], adm = role == "admin", s3_ip = (S.scan || {}).s3_ip || "192.168.4.1";
+    return `<div class="card"><h3>Today's Summary</h3><div class="grid g4" style="margin:0">${[["⚖️","Total Waste",sum(td) + "g"],["🍽️","Meals Logged",td.length],["📍","Primary Location","Main Cafeteria"],["⏰","Last Logged",last ? last.ts.slice(11, 16) : "--:--"]].map(c => `<div><span style="font-size:1.3rem">${c[0]}</span><div class="sm">${c[1]}</div><b style="color:var(--gl);font-size:1.2rem">${c[2]}</b></div>`).join("")}</div></div>
+    <div class="grid g2">
+      <div class="card">
+        <div class="row"><h3>📹 ESP32-S3-CAM Live Smart Bin Feed</h3><button class="btn" style="padding:7px 12px" onclick="snapS3AndRecognize()">📸 Snap & Recognize Dish</button></div>
+        <div class="stream-box"><span class="live-tag">🟢 LIVE · ${esc(s3_ip)}:81</span><img id="wasteS3Stream" crossOrigin="anonymous" src="http://${esc(s3_ip)}:81/stream" onerror="this.src='https://via.placeholder.com/640x480/08131a/4ade80?text=Connect+to+ESP32-S3-CAM+Wi-Fi+(192.168.4.1)'"></div>
+      </div>
+      <div class="card">
+        <h3>🪪 Latest ESP32-CAM ID & Dish Verification</h3>
+        ${renderIdVerificationCard()}
+        <div style="margin-top:12px">${renderFoodPredictionCard()}</div>
+      </div>
+    </div>
+    <div class="card"><div class="row"><h3>Waste Records (By Exact Dish)</h3><span><select id="ft" onchange="filt.t=this.value;rows()"><option value="">All Dishes</option>${opts(dishOptions())}</select> <select id="fm" onchange="filt.m=this.value;rows()"><option value="">All Meals</option>${opts(MEALS)}</select></span></div>
+    <table><thead><tr><th>Event</th><th>Food Photo</th><th>ID Capture</th><th>Date & Time</th><th>Recognized Dish</th><th>Weight (g)</th><th>Meal</th><th>Next Step</th>${adm ? "<th>Actions</th>" : ""}</tr></thead><tbody id="rb"></tbody></table></div>
+    <div class="card"><h3>Export Report</h3><button class="btn ghost" onclick="print()">📄 Export as PDF</button> <button class="btn ghost" onclick="csv()">📊 Export as CSV</button> <button class="btn ghost" onclick="print()">🖨️ Print Report</button></div>${adm ? sim() : ""}`;
+  },
+  ai() {
+    const ev = S.ev, c = byCat(ev), t = sum(ev) || 1, pk = peak(ev), win = {breakfast: "before 11:00", lunch: "11:00 - 16:00", dinner: "after 16:00"};
+    const sc = S.scan || {}, fh = sc.food_history || [], s3_ip = sc.s3_ip || "192.168.4.1", menu = sc.menu || [];
+    return `
+    <!-- Active Chef Menu Bar -->
+    <div class="card" style="border-color:#22c55e66;padding:14px 20px">
+      <div class="row">
+        <div>
+          <b>🍽️ Active Recognition Mode: </b>
+          ${menu.length
+            ? `<span class="pill">Chef's Menu Mode (${menu.length} Dishes)</span> <span class="sm">AI matches plates against today's menu: ${menu.map(m => `<b>${esc(m.dish_name)}</b>`).join(", ")}</span>`
+            : `<span class="pill">Open-Vocabulary Dish Mode</span> <span class="sm">No menu set by Chef — AI identifies any Indian dish directly from its visual appearance!</span>`}
+        </div>
+        ${role == "admin" ? `<div style="display:flex;gap:8px"><button class="btn ghost" style="padding:7px 14px" onclick="go('menu')">👨‍🍳 Edit Today's Menu</button><button class="btn ghost" style="padding:7px 14px" onclick="apiKeyModal()">🔑 Free Gemini Key (${sc.gemini_active ? "Active" : "Optional"})</button></div>` : ""}
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <!-- Left Column: Live ESP32-S3-CAM Feed -->
+      <div class="card" style="border-color:#22c55e66">
+        <div class="row" style="margin-bottom:10px">
+          <div>
+            <h3 style="margin:0">📹 ESP32-S3-CAM Live Food Stream</h3>
+            <div class="sm">Direct MJPEG feed from <code>http://${esc(s3_ip)}:81/stream</code></div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input id="s3ip" value="${esc(s3_ip)}" placeholder="192.168.4.1" style="width:130px;margin:0;padding:7px 10px">
+            <button class="btn ghost" style="padding:7px 12px" onclick="saveS3Ip()">Set IP</button>
+          </div>
+        </div>
+
+        <div class="stream-box">
+          <span class="live-tag" id="s3Badge">🟢 LIVE S3-CAM (${esc(s3_ip)})</span>
+          <img id="s3LiveImg" crossOrigin="anonymous" src="http://${esc(s3_ip)}:81/stream" alt="ESP32-S3-CAM Stream" onerror="this.src='https://via.placeholder.com/640x480/08131a/4ade80?text=ESP32-S3-CAM+Stream+(' + encodeURIComponent('${esc(s3_ip)}') + ')'">
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn" onclick="snapS3AndRecognize()">📸 Snap from S3-CAM & Recognize Dish</button>
+          <button class="btn ghost" id="autoS3Btn" onclick="toggleAutoS3()">${autoS3Timer ? "⏹ Stop Auto-AI (Every 5s)" : "⚡ Auto-Recognize Every 5s"}</button>
+          <button class="btn ghost" id="fcamBtn" onclick="toggleFoodCam()">💻 Laptop Webcam</button>
+          <button class="btn" id="fSnapBtn" onclick="snapFoodCam()" style="display:none">📸 Snap Webcam</button>
+        </div>
+        <video id="fcamVideo" playsinline muted style="display:none;width:100%;margin-top:10px;border-radius:14px;background:#000;aspect-ratio:16/9;object-fit:cover;border:2px solid var(--g)"></video>
+
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center">
+          <input type="file" id="foodFile" accept="image/*" style="margin:0">
+          <button class="btn ghost" style="white-space:nowrap" onclick="recognizeFoodFile()">🔍 Upload & Recognize Dish</button>
+        </div>
+      </div>
+
+      <!-- Right Column: Live ID Verification Image + Exact Dish AI Result -->
+      <div class="card" style="display:flex;flex-direction:column;gap:14px;justify-content:space-between">
+        <div>
+          <div class="row" style="margin-bottom:8px">
+            <h3 style="margin:0">🪪 Step 1: Student ID Verification (ESP32-CAM)</h3>
+            <span class="sm">Captured via Bluetooth COM9</span>
+          </div>
+          <div id="liveIdBox">${renderIdVerificationCard()}</div>
+        </div>
+
+        <div>
+          <div class="row" style="margin-bottom:8px">
+            <h3 style="margin:0">🍱 Step 2: Exact Dish AI Recognition Result</h3>
+            <span class="sm">${sc.gemini_active ? "Gemini 2.5 Pro/Flash VLM" : "Free VLM + 28-Dish Spatial CV"}</span>
+          </div>
+          <div id="liveFoodBox">${renderFoodPredictionCard()}</div>
+        </div>
+      </div>
+    </div>
+
+    ${fh.length ? `<div class="card"><h3>📸 Recent AI Dish Detections</h3><table><thead><tr><th>Captured Frame</th><th>Time</th><th>Source</th><th>Recognized Dish</th><th>Plate Breakdown</th><th>Confidence</th><th>Model Used</th></tr></thead><tbody>
+      ${fh.slice(0, 8).map(f => `<tr>
+        <td>${f.image_url ? `<img src="${esc(f.image_url)}" style="width:64px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--g)">` : "—"}</td>
+        <td>${esc(fmt(f.ts))}</td>
+        <td><span class="chip">${f.source == "s3cam" ? "ESP32-S3-CAM" : f.source == "webcam" ? "Webcam" : "Upload"}</span></td>
+        <td><b style="color:var(--gl);font-size:.98rem">${esc(f.dish_name || f.category)}</b></td>
+        <td>${(f.breakdown || []).map(b => `<span class="chip">${esc(b.category)} ${b.pct}%</span>`).join(" ") || esc(f.category)}</td>
+        <td><span class="pill">${Math.round((f.confidence || 0.9) * 100)}%</span></td>
+        <td class="sm">${esc(f.model_used || "Dish Vision AI")}</td>
+      </tr>`).join("")}
+    </tbody></table></div>` : ""}
+
+    <div class="grid g2"><div class="card"><h3>Waste by Dish</h3>${donut(c)}<div style="margin-top:14px;text-align:center">${c.map((r, i) => `<span class="sm" style="margin-right:12px"><i class="dot" style="background:${COL[i % 6]}"></i>${esc(r[0])}</span>`).join("")}</div></div>
+    <div class="card"><h3>Insights & Recommendations</h3>${recs().map(r => `<p>${r[0]} <b>${esc(r[1])}</b><br><span class="sm">${esc(r[2])}</span></p>`).join("")}</div></div>
+    <div class="card"><h3>Most Wasted Dishes Ranking</h3><table><thead><tr><th>Rank</th><th>Dish Name</th><th>Waste %</th><th>Weight</th><th>Status</th></tr></thead><tbody>${c.map((r, i) => { const p = r[1] / t * 100;
+      return `<tr><td>#${i + 1}</td><td><b>${esc(r[0])}</b></td><td>${p.toFixed(1)}%</td><td>${r[1]} g</td><td><span class="pill ${p >= 25 ? "bad" : ""}">${p >= 25 ? "⚠ High" : "✓ Normal"}</span></td></tr>`; }).join("") || '<tr><td colspan="5" class="sm">No data yet</td></tr>'}</tbody></table></div>
+    ${tiles([["📦","Total Analyzed",ev.length.toLocaleString(),"disposal events"],["⚖️","Average per Event",ev.length ? Math.round(sum(ev) / ev.length) + " g" : "0 g","weight per drop"],["⏰","Peak Waste Time",pk ? pk[0][0].toUpperCase() + pk[0].slice(1) : "—",pk ? win[pk[0]] : ""]])}${role == "admin" ? review() : ""}`;
+  },
+  feedback() {
+    if (role == "admin") return fbAdmin();
+    const P = S.me.pending, mine = S.fb;
+    return `${S.me.blocked ? access() : ""}<div class="card"><h3>📝 Share Your Feedback</h3>
+    ${P.length ? `<label class="sm">Which bin drop is this about?</label><select id="fw"><option value="">General feedback</option>${P.map(w => `<option value="${w.id}">${esc(w.category)} · ${w.grams} g · ${esc(fmt(w.ts))}</option>`).join("")}</select>` : ""}
+    <p><b>How satisfied are you with today's meals?</b></p><div class="emo">${["😞 Very Poor","😕 Poor","😐 Average","🙂 Good","😄 Excellent"].map((x, i) => `<button type="button" class="btn ghost" onclick="sat=${i + 1};this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">${x}</button>`).join("")}</div>
+    <p><b>Rate the food quality</b></p><input type="range" id="fq" min="1" max="5" value="3"><div class="row sm"><span>Poor</span><span>Excellent</span></div>
+    <p><b>Rate the portion sizes</b></p><input type="range" id="fp" min="1" max="5" value="3"><div class="row sm"><span>Too Small</span><span>Too Large</span></div>
+    <p><b>Why did you waste food? (Select all that apply)</b></p><div class="chk">${RS.map((r, i) => `<label><input type="checkbox" value="${esc(r)}"> ${EM[i]} ${r}</label>`).join("")}</div>
+    <p><b>Your Suggestions & Comments</b></p><textarea id="fc" rows="4" maxlength="500" placeholder="What can we improve? Any suggestions for the kitchen team?"></textarea>
+    <p class="err" id="fe"></p><button class="btn ghost" onclick="sat=0;render()">Clear Form</button> <button class="btn" onclick="sendFb()">✔ Submit Feedback</button></div>
+    <div class="card"><h3>Your Feedback History</h3>${mine.map(f => `<div class="fbi"><span class="sm">${esc(fmt(f.ts))} · ${esc(f.category)}</span><br>${f.reason ? `<span class="pill">${esc(f.reason)}</span> ` : ""}${esc(f.note || "")}</div>`).join("") || '<p class="sm" style="text-align:center">No feedback submitted yet</p>'}</div>
+    <div class="card"><h3>💡 Tips to Reduce Food Waste</h3><div class="grid g4" style="margin:0">${[["Take What You Need","Start with smaller portions and ask for more if needed."],["Try New Foods","Taste new dishes before deciding you don't like them."],["Plan Your Meals","Check the menu beforehand and eat when you're actually hungry."],["Share with Friends","If you can't finish your meal, share it instead of throwing it away."],["Understand Composting","Leftovers that reach our bin become compost for the school garden."],["Provide Feedback","Tell the kitchen team what you like so future meals improve."]].map((x, i) => `<div class="tip"><i>${i + 1}</i><br><b>${x[0]}</b><div class="sm">${x[1]}</div></div>`).join("")}</div></div>`;
+  },
+  compost() {
+    const ev = S.ev, cs = ev.filter(e => route(e) == "Compost"), t = sum(cs) / 1000, all = sum(ev) || 1, rt = {};
+    ev.forEach(e => rt[route(e)] = (rt[route(e)] || 0) + e.grams);
+    return `${tiles([["🌿","Compostable Scraps",t.toFixed(2) + " kg","plant-based, measured at the bin"],["🪴","Estimated Compost Output",(t * YIELD).toFixed(2) + " kg","estimate only: about 30% of scrap weight"],["📊","Share Compostable",Math.round(sum(cs) / all * 100) + "%","of all recorded waste"],["🔎","Needs Review",ev.filter(e => route(e) == "Needs review").length,"unknown / mixed items"]])}
+    <div class="card"><div class="row"><h3>🌿 Compostable Scraps, Last 30 Days</h3><span class="sm">in kg</span></div>${line(daily(cs, 30).map(g => g / 1000), days(30).map(md))}</div>
+    <div class="grid g2"><div class="card"><h3>Waste Routing</h3>${bars(Object.entries(rt).sort((a, b) => b[1] - a[1]))}<p class="sm">Prevent first. Redistribute only safe, untouched surplus. Compost suitable plant scraps. Send everything else to an approved treatment process.</p></div>
+    <div class="card"><h3>Compost Safety Notes</h3><p class="sm">• Only plant-based scraps are routed to compost. Cooked and mixed food goes to a treatment facility.<br>• Drying or grinding food alone is not composting. Call the output compost only after the process supports it.<br>• Keep the composter's heater and motor away from wet food and run it under supervision.<br>• Compost output is an estimate until you weigh real batches.</p></div></div>`;
+  },
+  analytics() {
+    const ev = S.ev, c = byCat(ev), w = sum(inDays(ev, 7)), pw = prevWeek(ev);
+    return `${tiles([["📊","Today's Waste",kg(sum(ev.filter(isToday))) + "kg","from bin drops today"],["📈","This Month",kg(sum(inDays(ev, 30))) + "kg","last 30 days"],["🍽️","Most Wasted Dish",c[0] ? c[0][0] : "—",c[0] ? kg(c[0][1]) + "kg" : ""],["🧾","Disposal Events",ev.length,"records saved"]])}
+    <div class="card"><div class="row"><h3>30-Day Waste Trends</h3><span class="sm">in kg</span></div>${line(daily(ev, 30).map(g => g / 1000), days(30).map(md))}</div>
+    <div class="grid g2"><div class="card"><h3>Waste by Dish Name</h3>${bars(c)}</div><div class="card"><h3>Waste by Meal Period</h3>${bars(MEALS.map(m => [m, sum(ev.filter(e => meal(e) == m))]))}</div></div>
+    <div class="card"><h3>Canteen Access</h3><p class="sm">${ev.filter(e => !e.answered).length} bin drop(s) are waiting for feedback. ${S.st.filter(s => s.blocked).length} student(s) are currently blocked.${S.me.role == "manager" ? ' <a href="#" style="color:var(--gl)" onclick="go(&quot;access&quot;);return false">Manage access →</a>' : " Only the manager can change access."}</p></div>
+    <div class="card"><h3>🍱 Recommendations for Kitchen Team</h3>${recs().map(r => `<p>${r[0]} <b>${esc(r[1])}</b><br><span class="sm">${esc(r[2])}</span></p>`).join("")}</div>
+    ${tiles([["⚖️","Average per Event",ev.length ? Math.round(sum(ev) / ev.length) + " g" : "0 g","total ÷ valid events"],["📅","Average Daily Waste",kg(sum(inDays(ev, 30)) / 30) + "kg","per day, last 30 days"],["↔️","Change vs Last Week",(pw ? Math.round((pw - w) / pw * 100) : 0) + "%","positive = less waste"]])}
+    <div class="card"><h3>Reports & Actions</h3><button class="btn ghost" onclick="csv()">📊 Export Report</button> <button class="btn ghost" onclick="print()">🖨️ Print Dashboard</button> <button class="btn ghost" onclick="window.open('/dashboard')">📺 Live Wall Dashboard</button></div>`;
+  },
+  access() {
+    const all = (S.users ? S.users.users : []).filter(u => u.role == "student"), bl = all.filter(u => u.blocked).length;
+    return `${tiles([["🎓","Students",all.length,"registered accounts"],["🚫","Blocked Now",bl,"cannot use the canteen"],["✅","Allowed",all.length - bl,"can use the canteen"],["✉️","Unread Notes",unread(),"from blocked students"]])}
+    ${notesCard()}
+    <div class="card"><div class="row"><h3>Canteen Access Control</h3><input placeholder="Search student..." value="${esc(sq)}" oninput="sq=this.value;accRows()" style="width:200px"></div>
+    <p class="sm">Automatic blocks a student whose feedback is more than 24 hours overdue. Allow overrides that rule. Block stops access whatever the feedback status. Reset returns the student to Automatic.</p>
+    <table><thead><tr><th>Name</th><th>Student Login</th><th>Barcode ID</th><th>Overdue Drops</th><th>Status</th><th>Rule</th><th>Actions</th></tr></thead><tbody id="ab"></tbody></table></div>`;
+  },
+  users() {
+    const L = S.users ? S.users.users : [], on = u => u.last_seen && Date.now() - new Date(u.last_seen) < 60000, today = ymd(new Date()),
+      seen = L.filter(u => u.login_count > 0).sort((a, b) => (b.last_login || "").localeCompare(a.last_login || "")), RN = {chef: "Chef", manager: "Manager", student: "Student"};
+    return `${tiles([["👥","Accounts",L.length,"all roles"],["🔑","Have Logged In",seen.length,"at least once"],["🟢","Online Now",L.filter(on).length,"active in the last minute"],["📅","Logged In Today",L.filter(u => (u.last_login || "").startsWith(today)).length,"different people"]])}
+    <div class="card"><h3>Everyone Who Has Logged In</h3><table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Last Login</th><th>Logins</th><th>Status</th></tr></thead><tbody>${seen.map(u => `<tr><td><b>${esc(u.name)}</b></td><td><code>${esc(u.username)}</code></td><td>${RN[u.role] || esc(u.role)}</td><td>${esc(fmt(u.last_login))}</td><td>${u.login_count}</td><td><span class="pill ${on(u) ? "" : "off"}">${on(u) ? "🟢 Online" : "Offline"}</span></td></tr>`).join("") || '<tr><td colspan="6" class="sm" style="text-align:center">Nobody has logged in yet</td></tr>'}</tbody></table></div>
+    <div class="card"><h3>Recent Login Activity</h3>${(S.users ? S.users.logins : []).map(l => `<div class="fbi row"><span><b>${esc(l.name || l.username)}</b> <span class="sm">(${esc(l.username)})</span></span><span class="sm">${esc(fmt(l.ts))}</span></div>`).join("") || '<p class="sm">No logins recorded yet.</p>'}</div>`;
+  },
+  notifs() {
+    const N = S.notifs || [];
+    return `<div class="card row"><span>Alerts appear here the moment you waste food, while FoodNova is open. Turn on browser alerts to also see them over other tabs.</span><button class="btn ghost" onclick="enableAlerts()">🔔 Turn on browser alerts</button></div>
+    <div class="card"><h3>Waste Alerts</h3>${N.map(n => `<div class="fbi row"><span>🗑️ ${esc(n.message)}</span><span class="sm" style="white-space:nowrap">${n.seen ? "" : '<span class="pill">New</span> '}${esc(fmt(n.ts))}</span></div>`).join("") || '<p class="sm" style="text-align:center">No alerts yet. When you scan your ID barcode at the bin, your waste alert appears here.</p>'}</div>`;
+  },
+  scanner() {
+    const s = S.scan || {}, st = s.status || {}, t = s.stats || {}, bt = s.bt || {}, L = s.latest, n = t.n || 0, pct = v => n ? Math.round((v || 0) / n * 100) + "%" : "To be measured";
+    const imgSrc = (L && L.image_url) || bt.last_id_image || "https://via.placeholder.com/160x120/0a1720/4ade80?text=Waiting+for+IR";
+    const isRejected = (bt.status == "ID Not Detected") || (L && !L.matched);
+    return `${tiles([["📷","Total Scans",n,"ESP32-CAM & Webcam"],["🔎","Barcode Read",pct(t.readable),"1D Barcode decoded"],["🎯","Student Matched",pct(t.matched),"linked to student ID"],["🟦","Card Detected",st.yolo ? pct(t.found) : "Active","Strict 1D Barcode Pipeline"]])}
+
+    <div class="card" style="border-color:${bt.connected ? "#166534" : "#7f1d1d"};background:${bt.connected ? "#14532d22" : "#3b0d0d33"}">
+      <div class="row">
+        <div>
+          <h3 style="margin:0;color:${bt.connected ? "var(--gl)" : "#fca5a5"}">${bt.connected ? "🟢 ESP32-CAM Bluetooth Connected (" + esc(bt.port) + ")" : "🔴 ESP32-CAM Bluetooth Waiting (" + esc(bt.port || "COM9") + ")"}</h3>
+          <div class="sm" style="margin-top:4px">Status: <b>${esc(bt.status || "Waiting...")}</b></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" onclick="trigScan('hw')">📸 Capture from ESP32-CAM</button>
+          <button class="btn ghost" onclick="trigScan('sim')">🤖 Simulate Barcode Scan</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card" style="display:flex;gap:20px;align-items:center">
+        <div style="text-align:center">
+          <img src="${esc(imgSrc)}" style="width:190px;height:142px;object-fit:cover;border-radius:14px;border:2px solid ${isRejected ? "#ef4444" : "var(--g)"};background:#000">
+          <div class="sm" style="margin-top:6px">ESP32-CAM Captured ID Image</div>
+        </div>
+        <div style="flex:1">
+          <span class="pill ${isRejected ? "bad" : ""}">${isRejected ? "❌ ID Not Detected" : L ? "✓ Barcode Verified · " + Math.round((L.confidence || 0.96) * 100) + "%" : "Idle"}</span>
+          <h2 style="margin:8px 0 4px;font-size:1.45rem">${isRejected ? "ID Not Detected" : L && L.student_name ? esc(L.student_name) : "Show College ID Barcode"}</h2>
+          <div style="color:var(--gl);font-weight:800;font-size:1.1rem">${isRejected ? "Please hold a clear 1D barcode" : L && L.college_id ? esc(L.college_id) : "FN-2026-XXX"}</div>
+          <div class="sm" style="margin-top:6px">Method: <b>${L ? esc(L.method || "barcode") : "1D Barcode (Code 128 / EAN)"}</b></div>
+          <div class="sm" style="margin-top:4px">Scanned: ${L ? esc(fmt(L.ts)) : "Trigger IR sensor on GPIO 13"}</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🖥️ Live ESP32-CAM Serial Monitor (${esc(bt.port || "COM9")})</h3>
+        <div style="background:var(--field);border:1px solid var(--line);border-radius:12px;padding:10px;height:145px;overflow:auto;font-family:monospace;font-size:.78rem;color:var(--gl)">
+          ${(bt.logs || []).map(l => `<div>${esc(l)}</div>`).join("") || '<div class="sm">Waiting for serial logs from COM9...</div>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎓 College ID Barcode & Student Login Database</h3>
+      <table>
+        <thead><tr><th>College ID</th><th>1D Barcode</th><th>Student Name</th><th>Student Login</th><th>Password</th><th>Department</th><th>Status</th><th>Quick Scan</th></tr></thead>
+        <tbody>
+          ${(s.college_db || []).map(st => `<tr>
+            <td><b style="color:var(--gl)">${esc(st.college_id)}</b></td>
+            <td><code>${esc(st.card_id)}</code></td>
+            <td><b>${esc(st.name)}</b></td>
+            <td><code>${esc(st.username)}</code></td>
+            <td><code>${esc(st.pw)}</code></td>
+            <td>${esc(st.dept)}</td>
+            <td><span class="pill ${st.blocked ? "bad" : ""}">${st.blocked ? "Blocked" : "Allowed"}</span></td>
+            <td><button class="chip on" onclick="trigScan('sim','${esc(st.college_id)}')">Scan ${esc(st.college_id)}</button></td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card"><h3>📸 Recent ESP32-CAM ID Captures & Verification Gallery</h3><table><thead><tr><th>Captured ID Image</th><th>Time</th><th>Source</th><th>Student</th><th>College ID</th><th>Verification</th><th>Method</th></tr></thead><tbody>${(s.recent || []).map(r => `<tr>
+      <td>${r.image_url ? `<img src="${esc(r.image_url)}" style="width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid ${r.matched ? "var(--g)" : "#ef4444"}">` : "—"}</td>
+      <td>${esc(fmt(r.ts))}</td>
+      <td>${r.source == "device" ? "ESP32-CAM" : r.source == "laptop" ? "Laptop camera" : "Test upload"}</td>
+      <td><b>${esc(r.student_name || (r.matched ? "Matched" : "ID Not Detected"))}</b></td>
+      <td><b style="color:var(--gl)">${esc(r.college_id || "—")}</b></td>
+      <td><span class="pill ${r.matched ? "" : "bad"}">${r.matched ? "✓ Verified" : "✗ Rejected"}</span></td>
+      <td><span class="chip">${esc(r.method || "—")}</span></td>
+    </tr>`).join("") || '<tr><td colspan="7" class="sm" style="text-align:center">No scans yet</td></tr>'}</tbody></table></div>`;
+  },
+  tests() {
+    const T = S.tests || [], of = k => T.filter(t => t.kind == k), mean = a => a.reduce((x, y) => x + y, 0) / (a.length || 1),
+      sd = a => a.length > 1 ? Math.sqrt(a.reduce((s, x) => s + (x - mean(a)) ** 2, 0) / (a.length - 1)) : 0, TBD = '<p><b>To be measured</b></p>';
+    const card = (k, title, how, f1, f2, body) => `<div class="card"><h3>${title}</h3><p class="sm">${how}</p>${body}
+      <div class="grid g4" style="margin:12px 0 6px"><input id="${k}a" type="number" step="any" placeholder="${f1}"><input id="${k}b" type="number" step="any" placeholder="${f2}"><input id="${k}n" placeholder="Note (optional)"><button class="btn" onclick="addTest('${k}')">Add result</button></div>
+      ${of(k).slice(0, 6).map(t => `<span class="sm">${t.a} · ${t.b} ${esc(t.note || "")} <a href="#" style="color:#f87171" onclick="delTest(${t.id});return false">remove</a></span><br>`).join("")}</div>`;
+    const ac = of("accuracy"), ae = ac.map(t => Math.abs(t.b - t.a)), rp = of("repeat"), cl = of("class"), lg = of("log"), us = of("usability");
+    return `<p class="sm">Fill these in only after testing the real prototype. Nothing is shown as a result until you enter measurements.</p>
+    ${card("accuracy", "1. Weight accuracy", "Compare with known masses such as 50, 100, 200 and 500 g.", "Reference mass (g)", "Device reading (g)", ac.length ? `<p>Mean error <b>${mean(ae).toFixed(2)} g</b> · mean error <b>${mean(ac.map(t => t.a ? Math.abs(t.b - t.a) / t.a * 100 : 0)).toFixed(2)}%</b> · worst <b>${Math.max(...ae).toFixed(2)} g</b> (${ac.length} readings)</p>` : TBD)}
+    ${card("repeat", "2. Repeatability", "Weigh the same mass several times under the same conditions.", "Reference mass (g)", "Reading (g)", rp.length ? [...new Set(rp.map(t => t.a))].map(m => { const v = rp.filter(t => t.a == m).map(t => t.b); return `<p>${m} g: mean <b>${mean(v).toFixed(2)}</b> · SD <b>${sd(v).toFixed(2)}</b> · range ${Math.min(...v)} to ${Math.max(...v)} (${v.length} readings)</p>`; }).join("") : TBD)}
+    ${card("class", "3. Classification", "Test examples from each defined food dish.", "1 = correct, 0 = wrong", "Confidence 0 to 1 (optional)", cl.length ? `<p>Accuracy <b>${Math.round(cl.filter(t => t.a == 1).length / cl.length * 100)}%</b> (${cl.filter(t => t.a == 1).length} of ${cl.length} correct)</p>` : TBD)}
+    ${card("log", "4. Event logging", "Do several disposals, then compare with the saved records.", "Disposals performed", "Records saved", `${lg.length ? `<p>Missing <b>${lg.reduce((s, t) => s + Math.max(0, t.a - t.b), 0)}</b> · extra or duplicate <b>${lg.reduce((s, t) => s + Math.max(0, t.b - t.a), 0)}</b></p>` : TBD}<p class="sm">Duplicates blocked automatically by the server so far: ${S.dupes || 0}</p>`)}
+    ${card("usability", "5. Usability", "A small supervised group tries the interface.", "1 = finished feedback, 0 = did not", "Ease 1 to 5 (optional)", us.length ? `<p>Feedback completion <b>${Math.round(us.filter(t => t.a == 1).length / us.length * 100)}%</b> · average ease <b>${mean(us.filter(t => t.b).map(t => t.b)).toFixed(1)}</b> (${us.length} trials)</p>` : TBD)}`;
+  }
+};
+
+// ---------------- Chef Menu Actions
+async function addCustomDish() {
+  const dn = ($("#customDish") && $("#customDish").value || "").trim();
+  const ml = ($("#customMeal") && $("#customMeal").value) || "Lunch";
+  if (dn.length < 2) return toast("Type a dish name first!");
+  await api("menu/add", {dishes: [dn], meal: ml});
+  toast(`Added "${dn}" to Today's Menu`);
+  await reload(); render();
+}
+
+async function quickAddDish(dish_name) {
+  const menu = (S.menuData && S.menuData.menu) || [];
+  const existing = menu.find(m => m.dish_name == dish_name);
+  if (existing) {
+    await api("menu/remove", {id: existing.id});
+    toast(`Removed "${dish_name}" from Today's Menu`);
+  } else {
+    await api("menu/add", {dishes: [dish_name], meal: "Lunch"});
+    toast(`Added "${dish_name}" to Today's Menu`);
+  }
+  await reload(); render();
+}
+
+async function removeMenuDish(id) {
+  await api("menu/remove", {id});
+  await reload(); render();
+}
+
+async function clearMenu() {
+  await api("menu/clear", {});
+  toast("Cleared Today's Menu -> Switched to Open-Vocabulary Dish Recognition!");
+  await reload(); render();
+}
+
+function apiKeyModal() {
+  const m = document.createElement("div"); m.className = "modal";
+  m.innerHTML = `<div class="card"><h3>🔑 Free Google AI Studio Key (Gemini 2.5 Pro/Flash)</h3>
+    <p class="sm">Paste a free API key from <b>aistudio.google.com</b> to unlock Gemini 2.5 Pro/Flash vision, or leave blank to use the built-in Free Keyless VLM + 28-Dish Spatial CV Engine.</p>
+    <input id="gkey" placeholder="AIzaSy...">
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn" onclick="saveApiKey()">Save Key</button>
+      <button class="btn ghost" onclick="this.closest('.modal').remove()">Cancel</button>
+    </div></div>`;
+  document.body.append(m);
+}
+
+async function saveApiKey() {
+  const k = ($("#gkey") && $("#gkey").value || "").trim();
+  await api("ai/key", {api_key: k});
+  document.querySelector(".modal").remove();
+  toast(k ? "Gemini 2.5 Vision API key saved!" : "Cleared API key (using free built-in engine)");
+  await reload(); render();
+}
+
+// ---------------- S3-CAM Live Stream & AI Dish Recognition Actions
+async function snapS3AndRecognize(silent = false) {
+  const s3_ip = (($("#s3ip") && $("#s3ip").value) || (S.scan && S.scan.s3_ip) || "192.168.4.1").trim();
+  if (!silent) toast("Capturing plate from ESP32-S3-CAM (" + s3_ip + ")...");
+
+  const liveImg = $("#s3LiveImg") || $("#wasteS3Stream");
+  if (liveImg && liveImg.naturalWidth > 0) {
+    try {
+      const c = document.createElement("canvas");
+      c.width = liveImg.naturalWidth;
+      c.height = liveImg.naturalHeight;
+      c.getContext("2d").drawImage(liveImg, 0, 0);
+      const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.92));
+      if (blob) {
+        const r = await fetch("/api/food/recognize", {
+          method: "POST",
+          headers: {Authorization: "Bearer " + token, "Content-Type": "image/jpeg", "X-Source": "s3cam"},
+          body: blob
+        });
+        const j = await r.json();
+        if (r.ok) {
+          if (!silent) toast(`✅ Dish Recognized: ${j.dish_name} (${Math.round(j.confidence * 100)}%)`);
+          await reload();
+          if (view == "ai") updateAiPanels(); else render();
+          return;
+        }
+      }
+    } catch (e) {}
+  }
+
+  try {
+    const j = await api("food/recognize", {cam_ip: s3_ip});
+    if (!silent) toast(`✅ Dish Recognized: ${j.dish_name} (${Math.round(j.confidence * 100)}%)`);
+    await reload();
+    if (view == "ai") updateAiPanels(); else render();
+  } catch (x) {
+    if (!silent) toast(x.message);
+  }
+}
+
+function toggleAutoS3() {
+  if (autoS3Timer) {
+    stopAutoS3();
+    toast("Stopped Auto-AI Recognition");
+  } else {
+    snapS3AndRecognize(false);
+    autoS3Timer = setInterval(() => snapS3AndRecognize(true), 5000);
+    toast("⚡ Auto-AI Dish Recognition active (every 5 seconds)");
+  }
+  const b = $("#autoS3Btn");
+  if (b) b.textContent = autoS3Timer ? "⏹ Stop Auto-AI (Every 5s)" : "⚡ Auto-Recognize Every 5s";
+}
+
+function stopAutoS3() {
+  if (autoS3Timer) clearInterval(autoS3Timer);
+  autoS3Timer = null;
+}
+
+async function recognizeFoodFile() {
+  const f = $("#foodFile") && $("#foodFile").files[0];
+  if (!f) return toast("Choose a food photo first!");
+  toast("Recognizing exact dish from photo...");
+  try {
+    const r = await fetch("/api/food/recognize", {method: "POST", headers: {Authorization: "Bearer " + token, "Content-Type": f.type || "image/jpeg", "X-Source": "upload"}, body: f});
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || "Recognition failed");
+    toast(`✅ Dish Recognized: ${j.dish_name} (${Math.round(j.confidence * 100)}%)`);
+    await reload(); render();
+  } catch (x) { toast(x.message); }
+}
+
+async function toggleFoodCam() {
+  if (foodCam.stream) return stopFoodCam();
+  try {
+    foodCam.stream = await navigator.mediaDevices.getUserMedia({video: {width: {ideal: 640}, height: {ideal: 480}}, audio: false});
+    const v = $("#fcamVideo");
+    if (v) { v.style.display = "block"; v.srcObject = foodCam.stream; await v.play(); }
+    if ($("#fcamBtn")) $("#fcamBtn").textContent = "⏹ Stop Webcam";
+    if ($("#fSnapBtn")) $("#fSnapBtn").style.display = "inline-block";
+  } catch (x) { toast("Camera error: " + x.message); }
+}
+
+function stopFoodCam() {
+  if (foodCam.stream) foodCam.stream.getTracks().forEach(t => t.stop());
+  foodCam.stream = null;
+  if ($("#fcamVideo")) $("#fcamVideo").style.display = "none";
+  if ($("#fcamBtn")) $("#fcamBtn").textContent = "💻 Laptop Webcam";
+  if ($("#fSnapBtn")) $("#fSnapBtn").style.display = "none";
+}
+
+async function snapFoodCam() {
+  const v = $("#fcamVideo");
+  if (!v || !v.videoWidth) return toast("Start the webcam first!");
+  const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext("2d").drawImage(v, 0, 0);
+  const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.9));
+  stopFoodCam();
+  toast("Recognizing dish from webcam capture...");
+  try {
+    const r = await fetch("/api/food/recognize", {method: "POST", headers: {Authorization: "Bearer " + token, "Content-Type": "image/jpeg", "X-Source": "webcam"}, body: blob});
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || "Recognition failed");
+    toast(`✅ Dish Recognized: ${j.dish_name}`);
+    await reload(); render();
+  } catch (x) { toast(x.message); }
+}
+
+async function saveS3Ip() {
+  const ip = ($("#s3ip") && $("#s3ip").value || "192.168.4.1").trim();
+  await api("s3cam/config", {cam_ip: ip});
+  toast("Connected ESP32-S3-CAM stream at " + ip);
+  await reload(); render();
+}
+
+async function recordAiDrop(category, dish_name, image_url, confidence) {
+  const g = +($("#aiGrams") && $("#aiGrams").value || 0);
+  if (!(g > 0)) return toast("Enter weight in grams!");
+  try {
+    const r = await api("waste", {grams: g, category: dish_name || category, dish_name: dish_name || category, image_url, confidence});
+    toast(`Logged ${g}g of ${dish_name || category}${r.student_linked ? " (Linked to " + r.student + "!)" : ""}`);
+    await reload(); render();
+  } catch (x) { toast(x.message); }
+}
+
+function recs() {
+  const ev = S.ev, c = byCat(ev), t = sum(ev), r = [], pk = peak(ev), rs = {};
+  if (c[0]) r.push(["💡", "Most Wasted Dish", `${c[0][0]} accounts for ${Math.round(c[0][1] / t * 100)}% of all waste (${c[0][1]} g).`], ["🎯", "Adjust " + c[0][0] + " batch / recipe", "Try serving smaller initial portions of " + c[0][0] + " with free refills, and check student taste feedback."]);
+  if (pk) r.push(["⏰", "Optimize " + pk[0] + " timing", `Most waste happens at ${pk[0]}. Consider staggered cooking batches.`]);
+  S.fb.forEach(f => (f.reason || "").split(", ").filter(Boolean).forEach(x => rs[x] = (rs[x] || 0) + 1));
+  const tr = Object.entries(rs).sort((a, b) => b[1] - a[1])[0]; if (tr) r.push(["💬", "Student Feedback Insight", `Students most often report "${tr[0]}" (${tr[1]} times).`]);
+  return r.length ? r : [["💡", "No data yet", "Dish recommendations appear after the first waste records."]];
+}
+function rows() {
+  const adm = role == "admin";
+  $("#rb").innerHTML = S.ev.filter(e => (!filt.t || (e.dish_name || e.category) == filt.t) && (!filt.m || meal(e) == filt.m)).slice(0, 100).map(e => `<tr>
+    <td>FN-${String(e.id).padStart(5, "0")}</td>
+    <td>${e.image_url ? `<img src="${esc(e.image_url)}" style="width:56px;height:42px;object-fit:cover;border-radius:6px;border:1px solid var(--g)">` : "—"}</td>
+    <td>${e.id_image_url ? `<img src="${esc(e.id_image_url)}" style="width:56px;height:42px;object-fit:cover;border-radius:6px;border:1px solid var(--line)">` : "—"}</td>
+    <td>${esc(fmt(e.ts))}</td>
+    <td><b style="color:var(--gl)">${esc(e.dish_name || e.category)}</b>${e.model_used ? `<div class="sm">${esc(e.model_used)}</div>` : ""}</td>
+    <td>${e.grams}g</td>
+    <td>${meal(e)}</td>
+    <td><span class="pill ${route(e) == "Needs review" ? "bad" : ""}">${route(e)}</span></td>
+    ${adm ? `<td><button class="btn ghost" onclick="del(${e.id})">🗑</button></td>` : ""}
+  </tr>`).join("") || '<tr><td colspan="9" class="sm" style="text-align:center">No records yet</td></tr>';
+  $("#ft").value = filt.t; $("#fm").value = filt.m;
+}
+function review() {
+  const u = S.ev.filter(e => e.category == "Unknown / Mixed" || e.category == "No Food Detected");
+  return `<div class="card"><h3>🔎 Manual Dish Review Queue (${u.length})</h3>${u.map(e => `<div class="row fbi"><span>FN-${String(e.id).padStart(5, "0")} · ${esc(fmt(e.ts))} · ${e.grams} g</span><span><select id="rv${e.id}" style="width:auto">${opts(dishOptions())}</select> <button class="btn" onclick="relabel(${e.id})">Save Dish</button></span></div>`).join("") || '<p class="sm">Nothing waiting. Unclear plates appear here for dish assignment.</p>'}</div>`;
+}
+async function relabel(id) { await api("relabel", {id, category: $("#rv" + id).value}); toast("Dish updated"); await reload(); render(); }
+async function addTest(k) {
+  const a = $("#" + k + "a").value, b = $("#" + k + "b").value; if (a === "") return toast("Enter the first value");
+  await api("test", {kind: k, a: +a, b: b === "" ? 0 : +b, note: $("#" + k + "n").value}); await reload(); render();
+}
+async function delTest(id) { await api("testdel", {id}); await reload(); render(); }
+const unread = () => (S.users ? S.users.notes : []).filter(n => !n.seen).length;
+const noteBox = () => `<div style="margin-top:14px"><label class="sm"><b>Leave a note for the manager</b></label>
+  <textarea id="nt" rows="3" maxlength="500" placeholder="Explain what happened or ask to have your access restored..."></textarea>
+  <button class="btn" onclick="sendNote()">Send note to manager</button>
+  ${(S.notes || []).map(n => `<div class="fbi"><span class="sm">${esc(fmt(n.ts))} · ${n.seen ? "Seen by the manager" : "Sent, not read yet"}</span><br>${esc(n.message)}</div>`).join("")}</div>`;
+const notesCard = () => { const N = S.users ? S.users.notes : [];
+  return `<div class="card"><h3>✉️ Notes from Blocked Students</h3>${N.map((n, i) => `<div class="fbi"><div class="row"><span><b>${esc(n.name || n.username)}</b> <span class="sm">${esc(fmt(n.ts))}</span> ${n.seen ? "" : '<span class="pill">New</span>'}</span><span>${n.seen ? "" : `<button class="btn ghost" onclick="noteRead(${i})">Mark read</button> `}<button class="btn" onclick="noteAllow(${i})">Allow access</button></span></div>${esc(n.message)}</div>`).join("") || '<p class="sm">No notes yet. Blocked students can write to you from their dashboard.</p>'}</div>`; };
+async function sendNote() { try { await api("note", {message: $("#nt").value}); toast("Note sent to the manager"); await reload(); render(); } catch (x) { toast(x.message); } }
+async function noteRead(i) { await api("noteread", {id: S.users.notes[i].id}); await reload(); render(); }
+async function noteAllow(i) { const n = S.users.notes[i]; await api("access", {username: n.username, mode: "allowed"}); await api("noteread", {id: n.id}); toast((n.name || n.username) + " can use the canteen again"); await reload(); render(); }
+let BT = null;
+function blockModal(i) {
+  BT = AL[i]; const m = document.createElement("div"); m.className = "modal";
+  m.innerHTML = `<div class="card"><h3>${BT.access == "blocked" ? "Edit reason for" : "Block"} ${esc(BT.name)}</h3><p class="sm">The student will see this reason on their dashboard.</p>
+  <textarea id="bn" rows="4" maxlength="300" placeholder="Why is this student being blocked?">${esc(BT.access_note || "")}</textarea><p class="err" id="be"></p>
+  <button class="btn" style="background:#b91c1c" onclick="saveBlock()">${BT.access == "blocked" ? "Save reason" : "Block student"}</button> <button class="btn ghost" onclick="this.closest('.modal').remove()">Cancel</button></div>`;
+  document.body.append(m); $("#bn").focus();
+}
+async function saveBlock() {
+  const note = $("#bn").value.trim();
+  if (note.length < 3) return $("#be").textContent = "Write a short reason so the student knows why.";
+  try { await api("access", {username: BT.username, mode: "blocked", note}); document.querySelector(".modal").remove(); toast(BT.name + ": access paused"); await reload(); render(); }
+  catch (x) { $("#be").textContent = x.message; }
+}
+const unreadN = () => (S.notifs || []).filter(n => !n.seen).length;
+function bell() { $("#bd").textContent = S.me.role == "manager" ? unread() || "" : role == "admin" ? S.ev.filter(e => !e.answered).length || "" : unreadN() || ""; }
+const cardBox = () => `<div class="card row"><span>🪪 ${S.me.card ? "ID Barcode linked: <b>" + esc(S.me.card) + "</b>" : "<b>Link your ID card barcode</b> so the bin can send you waste alerts"}</span><span style="display:flex;gap:8px"><input id="cid" placeholder="Barcode (e.g. FN2026101)" style="width:190px;margin:0"><button class="btn" onclick="saveCard()">${S.me.card ? "Change" : "Link"}</button></span></div>`;
+async function saveCard() { try { await api("cardid", {card: $("#cid").value}); toast("ID card barcode linked"); await reload(); render(); } catch (x) { toast(x.message); } }
+async function markRead() { try { await api("notifread", {}); (S.notifs || []).forEach(n => n.seen = 1); bell(); } catch (x) {} }
+function enableAlerts() { if (!window.Notification) return toast("This browser can't show alerts"); Notification.requestPermission().then(p => toast(p == "granted" ? "Browser alerts are on" : "Alerts were not allowed")); }
+async function trigScan(mode, college_id = "") {
+  try {
+    const r = await api("idscan/trigger", {mode, college_id});
+    toast(r.msg || "Triggered!");
+    setTimeout(async () => { await reload(); if (view == "ai") updateAiPanels(); else render(); }, 900);
+  } catch (x) { toast(x.message); }
+}
+let cam = {stream: null, timer: null, busy: false};
+async function camToggle() {
+  if (cam.stream) return camStop();
+  if (!navigator.mediaDevices) return toast("Open the app at http://localhost:8000 on the laptop to use its camera");
+  try {
+    cam.stream = await navigator.mediaDevices.getUserMedia({video: {width: {ideal: 1280}, height: {ideal: 720}}, audio: false});
+    const v = $("#cv"); v.srcObject = cam.stream; await v.play();
+    $("#cb").textContent = "Stop camera"; $("#cs").textContent = "Camera on. Looking for a 1D Barcode..."; $("#cm").innerHTML = "";
+    cam.timer = setInterval(camScan, 1200);
+  } catch (x) { cam.stream = null; toast("Could not open the camera: " + x.message); }
+}
+function camStop() {
+  clearInterval(cam.timer); cam.timer = null; if (cam.stream) cam.stream.getTracks().forEach(t => t.stop()); cam.stream = null;
+  const b = $("#cb"); if (b) b.textContent = "Start camera"; const s = $("#cs"); if (s) s.textContent = "Camera is off.";
+}
+async function camScan() {
+  const v = $("#cv"); if (!v || cam.busy || !v.videoWidth) return; cam.busy = true;
+  try {
+    const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
+    const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.85));
+    const r = await fetch("/api/scan", {method: "POST", headers: {Authorization: "Bearer " + token, "Content-Type": "image/jpeg", "X-Device-Id": "laptop"}, body: blob}), j = await r.json();
+    if (j.matched) camMatched(j); else if ($("#cs")) $("#cs").textContent = j.read ? "Barcode read (" + (j.code || "") + "), but no student has this ID number." : "ID Not Detected — Hold a clear 1D Barcode in front of the camera.";
+  } catch (x) {}
+  cam.busy = false;
+}
+function camMatched(j) {
+  clearInterval(cam.timer); cam.timer = null;
+  $("#cs").innerHTML = `✅ <b>Barcode read</b>. Student matched${j.name ? ": <b>" + esc(j.name) + " (" + esc(j.college_id || "") + ")</b>" : ""}.`;
+  $("#cm").innerHTML = `<p class="sm">Record what dish they are throwing away within ${j.window || 90} seconds.</p>
+    <select id="cc">${opts(dishOptions())}</select><input id="cg" type="number" min="1" placeholder="Grams wasted">
+    <button class="btn" onclick="camDrop()">Record dish drop</button> <button class="btn ghost" onclick="camAgain()">Scan another Barcode</button>`;
+}
+function camAgain() { $("#cm").innerHTML = ""; if (cam.stream) { $("#cs").textContent = "Camera on. Looking for a 1D Barcode..."; clearInterval(cam.timer); cam.timer = setInterval(camScan, 1200); } }
+async function camDrop() {
+  const g = +$("#cg").value; if (!(g > 0)) return toast("Enter the weight in grams");
+  const r = await fetch("/api/waste", {method: "POST", headers: {"Content-Type": "application/json", Authorization: "Bearer " + token, "X-Device-Id": "laptop"}, body: JSON.stringify({grams: g, category: $("#cc").value, dish_name: $("#cc").value})}), j = await r.json().catch(() => ({}));
+  if (!r.ok) return toast(j.error || "Could not record the drop");
+  toast(j.student_linked ? "Recorded. The student has been notified." : "Saved without a student: the scan expired. Scan the barcode again.");
+  camAgain(); try { await reload(); } catch (x) {}
+}
+let stream = {ctl: null, on: false};
+function stopStream() { if (stream.ctl) stream.ctl.abort(); stream.on = false; }
+async function startStream() {
+  if (S.me.role != "student" || stream.on) return; stream.on = true; stream.ctl = new AbortController();
+  try {
+    const r = await fetch("/api/stream", {headers: {Authorization: "Bearer " + token}, signal: stream.ctl.signal}), rd = r.body.getReader(), dec = new TextDecoder(); let buf = "";
+    while (true) {
+      const {value, done} = await rd.read(); if (done) break; buf += dec.decode(value, {stream: true}); let i;
+      while ((i = buf.indexOf("\n\n")) >= 0) { const c = buf.slice(0, i); buf = buf.slice(i + 2); if (c.startsWith("data: ")) onPush(JSON.parse(c.slice(6))); }
+    }
+  } catch (x) {}
+  stream.on = false; if (token) setTimeout(startStream, 3000);
+}
+function onPush(n) {
+  S.notifs = S.notifs || []; if (S.notifs.some(x => x.id == n.id)) return;
+  S.notifs.unshift({id: n.id, message: n.message, ts: n.ts, seen: 0}); toast("🔔 " + n.message);
+  if (window.Notification && Notification.permission == "granted") new Notification("FoodNova", {body: n.message});
+  bell(); if (["notifs", "dash"].includes(view) && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) render();
+}
+let AL = [];
+function accRows() {
+  const q = sq.toLowerCase(), rule = {auto: "Automatic", blocked: "Blocked by manager", allowed: "Allowed by manager"};
+  const NU = new Set((S.users ? S.users.notes : []).filter(n => !n.seen).map(n => n.username));
+  AL = (S.users ? S.users.users : []).filter(u => u.role == "student" && (u.name + " " + u.username).toLowerCase().includes(q));
+  $("#ab").innerHTML = AL.map((u, i) => `<tr><td><b>${esc(u.name)}</b>${NU.has(u.username) ? ' <span class="pill">✉ note</span>' : ""}</td><td><code>${esc(u.username)}</code> / <code>${esc(u.username)}@123</code></td><td><code>${esc((u.card_id || u.username).toUpperCase())}</code></td><td>${u.overdue}</td><td><span class="pill ${u.blocked ? "bad" : ""}">${u.blocked ? "Blocked" : "Allowed"}</span></td><td class="sm">${rule[u.access] || "Automatic"}${u.access == "blocked" && u.access_note ? `<br>Reason: ${esc(u.access_note)}` : ""}</td>
+    <td>${u.blocked ? `<button class="btn" onclick="setAccess(${i},'allowed')">Allow</button>` : `<button class="btn" style="background:#b91c1c" onclick="blockModal(${i})">Block</button>`}${u.access == "blocked" ? ` <button class="btn ghost" onclick="blockModal(${i})">Edit reason</button>` : ""} ${u.access != "auto" ? `<button class="btn ghost" onclick="setAccess(${i},'auto')">Reset</button>` : ""}</td></tr>`).join("") || '<tr><td colspan="7" class="sm" style="text-align:center">No students found</td></tr>';
+}
+async function setAccess(i, mode) {
+  const u = AL[i]; await api("access", {username: u.username, mode});
+  toast(u.name + ": " + (mode == "blocked" ? "blocked" : mode == "allowed" ? "allowed" : "set to automatic")); await reload(); render();
+}
+function fbAdmin() {
+  return `<div class="card"><h3>Student Feedback (${S.fb.length})</h3>${S.fb.map(f => `<div class="fbi"><span class="sm">${esc(fmt(f.ts))} · <b>${esc(f.category)}</b>${f.grams ? " · " + f.grams + " g" : ""}${f.satisfaction ? " · " + ["", "😞", "😕", "😐", "🙂", "😄"][f.satisfaction] : ""}</span><br>${f.reason ? `<span class="pill">${esc(f.reason)}</span> ` : ""}${esc(f.note || "")}</div>`).join("") || '<p class="sm">No feedback yet.</p>'}</div>`;
+}
+const sim = () => `<div class="card"><h3>🤖 Simulate a Dish Drop</h3><p class="sm">Stands in for the ESP32 station until the hardware load cell is connected.</p><div class="grid g4" style="margin:0">
+  <select id="su"><option value="">Active Scanned Student (or Anonymous)</option>${S.st.map(s => `<option value="${esc(s.username)}">${esc(s.name)} (${esc(s.username)})</option>`).join("")}</select><select id="sc">${opts(dishOptions())}</select>
+  <input id="sg" type="number" min="1" placeholder="Grams wasted"><label class="sm"><input id="sbk" type="checkbox" style="width:auto"> Backdate it (test the block)</label><label class="sm"><input id="sut" type="checkbox" style="width:auto"> Untouched kitchen surplus (safe)</label></div><br><button class="btn" onclick="simDrop()">Drop it in the bin</button></div>`;
+
+// ---------------- actions
+async function simDrop() { try { const d = $("#sc").value; await api("waste", {grams: +$("#sg").value, category: d, dish_name: d, student: $("#su").value, backdate: $("#sbk").checked, untouched: $("#sut").checked}); toast("Dish drop recorded"); await reload(); render(); } catch (x) { toast(x.message); } }
+async function del(id) { if (!confirm("Delete this record?")) return; await api("delete", {id}); await reload(); render(); }
+function logModal() {
+  const m = document.createElement("div"); m.className = "modal";
+  m.innerHTML = `<div class="card"><h3>Log Dish Waste</h3><label class="sm">Dish Name</label><select id="lc">${opts(dishOptions())}</select><label class="sm">Weight (g)</label><input id="lg" type="number" min="1">
+  <label class="sm">Meal</label><select id="lm">${opts(MEALS)}</select><label class="sm">Reason</label><select id="lr">${opts(RS)}</select><p class="err" id="le"></p>
+  <button class="btn" onclick="saveLog()">Save</button> <button class="btn ghost" onclick="this.closest('.modal').remove()">Cancel</button></div>`;
+  document.body.append(m);
+}
+async function saveLog() {
+  try { await api("log", {category: $("#lc").value, grams: +$("#lg").value, meal: $("#lm").value, reason: $("#lr").value}); document.querySelector(".modal").remove(); toast("Dish waste logged"); await reload(); render(); }
+  catch (x) { $("#le").textContent = x.message; }
+}
+async function sendFb() {
+  const rs = [...document.querySelectorAll(".chk input:checked")].map(i => i.value), note = $("#fc").value;
+  if (!sat && !rs.length && !note.trim()) return $("#fe").textContent = "Pick a rating, a reason or write a comment first.";
+  try { await api("feedback", {waste_id: $("#fw") ? $("#fw").value : null, satisfaction: sat, quality: +$("#fq").value, portion: +$("#fp").value, reasons: rs, note}); sat = 0; toast("Thank you! Feedback sent."); await reload(); render(); }
+  catch (x) { $("#fe").textContent = x.message; }
+}
+function csv() {
+  const r = [["Date", "Student", "Dish_Name", "Weight_g", "Meal", "Reason"], ...S.ev.map(e => [e.ts, e.username || "", e.dish_name || e.category, e.grams, meal(e), e.reason])];
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([r.map(x => x.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n")], {type: "text/csv"})); a.download = "foodnova-waste.csv"; a.click();
+}
+token ? boot() : auth();
+</script></body></html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FoodNova Barcode Scan Station</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08131a;--card:#0f1e28;--line:#1b3342;--g:#22c55e;--gl:#4ade80;--t:#eaf4f0;--m:#8ba7b0;--grad:linear-gradient(135deg,#22c55e,#10b981 60%,#2dd4bf)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:22px;color:var(--t);font:16px/1.5 "Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;background:radial-gradient(900px 520px at 88% -8%,#14532d66,transparent 60%),radial-gradient(700px 520px at -8% 108%,#0f766e50,transparent 60%),var(--bg);background-attachment:fixed}
+header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+h1{margin:0 auto 0 0;font-size:1.7rem;font-weight:800;letter-spacing:-.5px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{background:var(--grad);color:#04210f;border:0;border-radius:14px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}.btn.ghost{background:var(--card);color:var(--t);border:1px solid var(--line)}.btn.sel{outline:3px solid var(--gl);background:#14532d;color:#fff}
+.big{width:100%;font-size:1.2rem;padding:16px}
+main{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 34px #00000059}
+.cam{position:relative;overflow:hidden;padding:0;background:#000;aspect-ratio:16/9}
+.cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.frame{position:absolute;inset:25% 18%;border:3px solid #4ade80aa;border-radius:16px;animation:pulse 1.6s infinite;pointer-events:none}
+.cam.ok .frame{border-color:var(--gl);box-shadow:0 0 0 9999px #052e1688;animation:none}
+@keyframes pulse{50%{opacity:.3}}
+#msg{font-size:1.4rem;font-weight:800;margin:0 0 6px}.sm{color:var(--m);font-size:.9rem;margin:0 0 14px}
+.chips{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+#g{width:100%;font:inherit;font-size:2.4rem;font-weight:800;text-align:center;background:#0a1720;color:var(--gl);border:2px solid var(--line);border-radius:16px;padding:10px}
+#g:focus{outline:0;border-color:var(--g)}
+.quick{display:flex;gap:8px;margin:10px 0 14px}.quick .btn{flex:1;padding:10px}
+#cd{font-weight:800;color:#fbbf24}
+</style></head>
+<body>
+<header><h1>🌱 FoodNova Barcode Scan Station</h1><span class="sm" id="clock" style="margin:0"></span>
+  <button class="btn ghost" onclick="document.documentElement.requestFullscreen && document.documentElement.requestFullscreen()">Full screen</button></header>
+<main id="app">
+  <div class="card cam" id="cam"><video id="v" playsinline muted></video><div class="frame"></div></div>
+  <div class="card">
+    <p id="msg">Press Start camera</p><p class="sm" id="sub">Scans the 1D Barcode on the student's College ID card (or listens to ESP32-CAM on COM9).</p>
+    <button class="btn big" id="start" onclick="startCam()">Start camera</button>
+    <div id="drop" hidden>
+      <div class="chips" id="chips"></div>
+      <input id="g" type="number" inputmode="numeric" min="1" placeholder="grams">
+      <div class="quick"><button class="btn ghost" onclick="add(50)">+50</button><button class="btn ghost" onclick="add(100)">+100</button><button class="btn ghost" onclick="add(250)">+250</button><button class="btn ghost" onclick="clr()">Clear</button></div>
+      <button class="btn big" onclick="sendDrop()">Send alert to the student</button>
+      <p class="sm" style="margin-top:12px">Time left: <span id="cd"></span> s. The weight is typed by hand until the load cell is connected.</p>
+    </div>
+  </div>
+</main>
+<div class="card" id="gate" hidden style="max-width:460px;margin:60px auto;text-align:center"><h2>Chef or manager login needed</h2>
+  <p class="sm">Log in on the main page in this same browser, then open this station again.</p><a class="btn" href="/" style="display:inline-block;text-decoration:none">Go to login</a></div>
+<script>
+const $ = id => document.getElementById(id), token = localStorage.getItem("fn_token");
+const CATS = ["Rice-based", "Roti / Bread", "Dal & Curry", "Vegetables", "Fruits", "Other", "Unknown / Mixed"];
+let stream, timer, tick, busy = false, state = "off", pauseUntil = 0, cat = CATS[0], deadline = 0;
+const H = () => ({Authorization: "Bearer " + token, "X-Device-Id": "laptop"});
+const gate = () => { $("app").hidden = true; $("gate").hidden = false; };
+async function init() { try { const r = await fetch("/api/me", {headers: {Authorization: "Bearer " + token}}), m = await r.json(); if (!r.ok || m.role == "student") throw 0; } catch (x) { gate(); } }
+function beep(f = 880, d = .15) { try { const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(); o.frequency.value = f; o.connect(a.destination); o.start(); setTimeout(() => { o.stop(); a.close(); }, d * 1000); } catch (x) {} }
+function say(m, s) { $("msg").textContent = m; $("sub").textContent = s || ""; }
+async function startCam() {
+  if (!navigator.mediaDevices) return say("Open http://localhost:8000/station", "Browsers only allow the camera on localhost.");
+  try { stream = await navigator.mediaDevices.getUserMedia({video: {width: {ideal: 1280}, height: {ideal: 720}}, audio: false}); $("v").srcObject = stream; await $("v").play(); $("start").hidden = true; scanning(); }
+  catch (x) { say("Could not open the camera", x.message); }
+}
+function scanning() {
+  state = "scan"; $("cam").classList.remove("ok"); $("drop").hidden = true; clearInterval(tick);
+  say("Show your College ID Barcode", "Hold the 1D barcode steady inside the rectangle, about 20 cm from the lens."); clearInterval(timer); timer = setInterval(scanFrame, 1000);
+}
+async function scanFrame() {
+  const v = $("v"); if (state != "scan" || busy || !v.videoWidth || Date.now() < pauseUntil) return; busy = true;
+  try {
+    const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
+    const blob = await new Promise(r => c.toBlob(r, "image/jpeg", .85));
+    const r = await fetch("/api/scan", {method: "POST", headers: {...H(), "Content-Type": "image/jpeg"}, body: blob}), j = await r.json();
+    if (r.status == 401 || r.status == 403) gate();
+    else if (j.matched) onMatch(j);
+    else if (j.read) { beep(300, .3); say("Barcode read (" + (j.code || "") + "), but no student matches", "Ask the student to link this ID barcode number in FoodNova."); pauseUntil = Date.now() + 3500; }
+  } catch (x) {}
+  busy = false;
+}
+function onMatch(j) {
+  state = "drop"; clearInterval(timer); beep(); $("cam").classList.add("ok");
+  say("✅ Barcode Verified" + (j.name ? ": " + j.name : ""), (j.college_id ? j.college_id + " · " : "") + "Pick the food type and enter the weight.");
+  const box = $("chips"); box.innerHTML = ""; cat = CATS[0];
+  CATS.forEach(c => { const b = document.createElement("button"); b.className = "btn ghost"; b.textContent = c; b.dataset.c = c; b.onclick = () => { cat = c; mark(); }; box.append(b); }); mark();
+  $("g").value = ""; $("drop").hidden = false; deadline = Date.now() + (j.window || 90) * 1000; clearInterval(tick); tick = setInterval(count, 250); count();
+}
+const mark = () => document.querySelectorAll("#chips .btn").forEach(b => b.dataset.c == cat ? b.classList.add("sel") : b.classList.remove("sel"));
+function count() {
+  const s = Math.max(0, Math.round((deadline - Date.now()) / 1000)); $("cd").textContent = s;
+  if (!s && state == "drop") { beep(300, .3); scanning(); say("Scan expired", "Show the ID barcode again."); }
+}
+const add = n => { $("g").value = (+$("g").value || 0) + n; }, clr = () => { $("g").value = ""; };
+async function sendDrop() {
+  if (state != "drop") return;
+  const g = +$("g").value; if (!(g > 0)) return say("Enter the weight in grams", "");
+  state = "wait";
+  const r = await fetch("/api/waste", {method: "POST", headers: {...H(), "Content-Type": "application/json"}, body: JSON.stringify({grams: g, category: cat})}), j = await r.json().catch(() => ({}));
+  clearInterval(tick); $("drop").hidden = true; state = "wait";
+  if (!r.ok) say("Could not save", j.error || ""); else { beep(1175, .2); say(j.student_linked ? "✅ Alert sent to the student" : "Saved without a student", j.student_linked ? g + " g of " + cat + ". Thank you!" : "The scan had expired. Show the ID barcode again."); }
+  setTimeout(scanning, 2500);
+}
+setInterval(() => $("clock").textContent = new Date().toLocaleTimeString(), 1000); init();
+</script></body></html>
